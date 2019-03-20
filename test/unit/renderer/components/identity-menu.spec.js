@@ -18,7 +18,7 @@
 // @flow
 import { beforeEach, describe, expect, it } from '../../../helpers/dependencies'
 import DIContainer from '../../../../src/app/di/vue-container'
-import IdentityRegistration from '@/components/identity-registration'
+import IdentityMenu from '@/components/identity-menu'
 import { createLocalVue, mount } from '@vue/test-utils'
 import DirectMessageBus from '../../../helpers/direct-message-bus'
 import { buildRendererCommunication } from '../../../../src/app/communication/renderer-communication'
@@ -32,9 +32,9 @@ import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
 import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
 
-describe('IdentityRegistration', () => {
+describe('IdentityMenu', () => {
   let rendererCommunication: RendererCommunication
-  let wrapper: IdentityRegistration
+  let wrapper: IdentityMenu
   let store: Vuex.Store
 
   function mountEverything (currentIdentity: ?IdentityDTO) {
@@ -62,7 +62,7 @@ describe('IdentityRegistration', () => {
       }
     })
 
-    wrapper = mount(IdentityRegistration, {
+    wrapper = mount(IdentityMenu, {
       localVue: vm,
       store
     })
@@ -74,7 +74,7 @@ describe('IdentityRegistration', () => {
     })
 
     it('should still render component', () => {
-      expect(wrapper.findAll('#identity-registration')).to.have.lengthOf(1)
+      expect(wrapper.findAll('#identity-menu')).to.have.lengthOf(1)
     })
   })
 
@@ -83,10 +83,10 @@ describe('IdentityRegistration', () => {
       mountEverything({ id: '0x1' })
     })
 
-    it('renders content when menu is opened', () => {
-      expect(wrapper.findAll('#identity-registration.is-open')).to.have.lengthOf(0)
+    it('renders menu when it is opened', () => {
+      expect(wrapper.findAll('#identity-menu.is-open')).to.have.lengthOf(0)
       store.commit(types.SHOW_IDENTITY_MENU)
-      expect(wrapper.findAll('#identity-registration.is-open')).to.have.lengthOf(1)
+      expect(wrapper.findAll('#identity-menu.is-open')).to.have.lengthOf(1)
     })
 
     it('renders client ID', () => {

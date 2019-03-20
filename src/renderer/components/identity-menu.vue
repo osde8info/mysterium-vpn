@@ -17,7 +17,7 @@
 
 <template>
   <div
-    id="identity-registration"
+    id="identity-menu"
     class="app__nav nav"
     :class="{'is-open': isIdentityMenuOpen}">
     <div
@@ -28,7 +28,7 @@
         <close-button :click="hideInstructions"/>
       </div>
 
-      <nav-list class="identity-registration-content">
+      <nav-list class="identity-menu-content">
         <h1 slot="item">Mysterium ID</h1>
 
         <div
