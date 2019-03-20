@@ -83,10 +83,10 @@ describe('IdentityRegistration', () => {
       mountEverything({ id: '0x1' })
     })
 
-    it('renders instructions when menu is opened', () => {
-      expect(wrapper.findAll('#registration-instructions.is-open')).to.have.lengthOf(0)
+    it('renders content when menu is opened', () => {
+      expect(wrapper.findAll('#identity-registration.is-open')).to.have.lengthOf(0)
       store.commit(types.SHOW_IDENTITY_MENU)
-      expect(wrapper.findAll('#registration-instructions.is-open')).to.have.lengthOf(1)
+      expect(wrapper.findAll('#identity-registration.is-open')).to.have.lengthOf(1)
     })
 
     it('renders client ID', () => {
