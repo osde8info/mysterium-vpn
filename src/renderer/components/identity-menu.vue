@@ -28,7 +28,7 @@
         <close-button :click="hideInstructions"/>
       </div>
 
-      <nav-list class="identity-menu-content">
+      <nav-list>
         <h1 slot="item">Mysterium ID</h1>
 
         <div
