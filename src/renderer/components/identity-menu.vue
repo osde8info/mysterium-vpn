@@ -17,11 +17,10 @@
 
 <template>
   <div
-    id="identity-menu"
-    class="app__nav nav"
+    class="app__nav nav nav--right"
     :class="{'is-open': isIdentityMenuOpen}">
     <div
-      class="nav__content"
+      class="nav__content nav__content--right"
       :class="{'is-open': isIdentityMenuOpen}">
 
       <div class="nav__navicon">
@@ -29,77 +28,77 @@
       </div>
 
       <nav-list>
-        <h1 slot="item">Mysterium ID</h1>
-
         <div
-          slot="item"
-          v-if="consumerId"
-          class="consumer-id-view">
-          <div class="consumer-id-view__item">
-            <logo-icon :active="registrationFetched"/>
-          </div>
-          <div class="consumer-id-view__item">
-            <span
-              class="consumer-id-view__id-text"
-              :class="{'consumer-id-view__id-text--registered': registrationFetched}">
-              {{ consumerId }}
-            </span>
-          </div>
-          <div class="consumer-id-view__item">
-            <copy-button :text="consumerId"/>
-          </div>
-        </div>
+          class="identity-menu"
+          slot="item">
+          <h1>Mysterium ID</h1>
 
-        <h1 slot="item">Ether address</h1>
-
-        <div
-          slot="item"
-          class="consumer-id-view">
-          <img
-            src="../../../static/icons/ethereum.png"
-            class="consumer-id-view__item icon-ethereum">
           <div
-            class="consumer-id-view__item"
-            v-if="savedEthAddress === null">
-            <input
-              type="text"
-              v-model="inputEthAddress"
-              placeholder="Enter Ether address to receive Bounty rewards">
-            <div
-              class="btn"
-              @click="saveEtherAddress()">
-              OK
+            v-if="consumerId"
+            class="consumer-id-view">
+            <div class="consumer-id-view__item">
+              <logo-icon :active="registrationFetched"/>
+            </div>
+            <div class="consumer-id-view__item">
+              <span
+                class="consumer-id-view__id-text"
+                :class="{'consumer-id-view__id-text--registered': registrationFetched}">
+                {{ consumerId }}
+              </span>
+            </div>
+            <div class="consumer-id-view__item">
+              <copy-button :text="consumerId"/>
             </div>
           </div>
-          <div
-            class="consumer-id-view__item"
-            v-if="savedEthAddress !== null">
-            {{ savedEthAddress }}
-          </div>
-        </div>
 
-        <div
-          slot="item"
-          v-if="paymentsAreEnabled && registrationFetched && !registration.registered">
-          <p>
-            In order to use Mysterium VPN you need to have registered ID in Mysterium Blockchain
-            by staking your MYST tokens on it (i.e. paying for it).
-          </p>
-          <p>
-            To pay for the ID we suggest to use MetaMask wallet.
-            Please follow below instructions to proceed further:
-          </p>
-          <ul>
-            <li>1. Click on the “Register Your ID” button</li>
-            <li>2. Claim MYST and ETH test tokens</li>
-            <li>3. Allow Mysterium SmartContract to reserve MYST tokens</li>
-            <li>4. Register your ID by clicking on “Pay & Register For ID”</li>
-            <li>5. Wait for few minutes until the payment is processed</li>
-          </ul>
+          <h2>Ether address</h2>
+
+          <div class="consumer-id-view">
+            <img
+              src="../../../static/icons/ethereum.png"
+              class="consumer-id-view__item icon-ethereum">
+            <div
+              class="consumer-id-view__item"
+              v-if="savedEthAddress === null">
+              <input
+                type="text"
+                v-model="inputEthAddress"
+                placeholder="Enter Ether address to receive Bounty rewards">
+              <div
+                class="btn"
+                @click="saveEtherAddress()">
+                OK
+              </div>
+            </div>
+            <div
+              class="consumer-id-view__item"
+              v-if="savedEthAddress !== null">
+              {{ savedEthAddress }}
+            </div>
+          </div>
+
           <div
-            class="btn"
-            @click="openPaymentsUrl()">
-            Register Your ID
+            v-if="paymentsAreEnabled && registrationFetched && !registration.registered">
+            <p>
+              In order to use Mysterium VPN you need to have registered ID in Mysterium Blockchain
+              by staking your MYST tokens on it (i.e. paying for it).
+            </p>
+            <p>
+              To pay for the ID we suggest to use MetaMask wallet.
+              Please follow below instructions to proceed further:
+            </p>
+            <ul>
+              <li>1. Click on the “Register Your ID” button</li>
+              <li>2. Claim MYST and ETH test tokens</li>
+              <li>3. Allow Mysterium SmartContract to reserve MYST tokens</li>
+              <li>4. Register your ID by clicking on “Pay & Register For ID”</li>
+              <li>5. Wait for few minutes until the payment is processed</li>
+            </ul>
+            <div
+              class="btn"
+              @click="openPaymentsUrl()">
+              Register Your ID
+            </div>
           </div>
         </div>
       </nav-list>
@@ -107,7 +106,7 @@
     <transition name="fade">
       <div
         v-if="isIdentityMenuOpen"
-        class="nav__backdrop"
+        class="nav__backdrop nav__backdrop--right"
         @click="hideInstructions"/>
     </transition>
   </div>

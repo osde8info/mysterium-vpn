@@ -19,7 +19,7 @@
   <div
     class="nav"
     :class="{'is-open':navOpen}">
-    <div class="nav__content">
+    <div class="nav__content nav__content--small">
       <div class="nav__content-top">
         <div
           class="nav__navicon"

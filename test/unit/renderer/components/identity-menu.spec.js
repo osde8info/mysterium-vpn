@@ -74,7 +74,7 @@ describe('IdentityMenu', () => {
     })
 
     it('should still render component', () => {
-      expect(wrapper.findAll('#identity-menu')).to.have.lengthOf(1)
+      expect(wrapper.findAll('.identity-menu')).to.have.lengthOf(1)
     })
   })
 
@@ -84,9 +84,9 @@ describe('IdentityMenu', () => {
     })
 
     it('renders menu when it is opened', () => {
-      expect(wrapper.findAll('#identity-menu.is-open')).to.have.lengthOf(0)
+      expect(wrapper.classes()).not.to.contain('is-open')
       store.commit(types.SHOW_IDENTITY_MENU)
-      expect(wrapper.findAll('#identity-menu.is-open')).to.have.lengthOf(1)
+      expect(wrapper.classes()).to.contain('is-open')
     })
 
     it('renders client ID', () => {
