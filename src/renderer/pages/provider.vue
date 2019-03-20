@@ -92,7 +92,7 @@ export default {
     'tequilapiClient',
     'bugReporter',
     'providerService',
-    'dashboardBaseUrl'
+    'providerConfig'
   ],
   data () {
     return {
@@ -197,7 +197,8 @@ export default {
       this.pendingStartRequest = true
 
       try {
-        await this.providerService.start(this.currentIdentity)
+        // TODO: before starting service, ensure that VPN service has finished stopping
+        await this.providerService.start(this.currentIdentity, this.providerConfig.serviceType)
 
         this.$store.commit(type.HIDE_ERROR)
       } catch (e) {
@@ -258,11 +259,11 @@ export default {
     },
 
     openStatsPage () {
-      shell.openExternal(this.getProviderStatsLink(this.currentIdentity, 'openvpn'))
+      shell.openExternal(this.getProviderStatsLink(this.currentIdentity, this.providerConfig.serviceType))
     },
 
     getProviderStatsLink (providerId, serviceType) {
-      return this.dashboardBaseUrl + '/node/' + providerId + '/' + serviceType
+      return this.providerConfig.baseURL + '/node/' + providerId + '/' + serviceType
     }
   }
 }
