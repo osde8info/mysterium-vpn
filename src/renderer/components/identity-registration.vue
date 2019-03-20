@@ -51,6 +51,34 @@
             </div>
           </div>
 
+          <h1 slot="item">Ether address</h1>
+
+          <div
+            slot="item"
+            class="consumer-id-view">
+            <img
+              src="../../../static/icons/ethereum.png"
+              class="consumer-id-view__item icon-ethereum">
+            <div
+              class="consumer-id-view__item"
+              v-if="savedEthAddress === null">
+              <input
+                type="text"
+                v-model="inputEthAddress"
+                placeholder="Enter Ether address to receive Bounty rewards">
+              <div
+                class="btn"
+                @click="saveEtherAddress()">
+                OK
+              </div>
+            </div>
+            <div
+              class="consumer-id-view__item"
+              v-if="savedEthAddress !== null">
+              {{ savedEthAddress }}
+            </div>
+          </div>
+
           <div
             slot="item"
             v-if="paymentsAreEnabled && registrationFetched && !registration.registered">
@@ -106,6 +134,12 @@ export default {
     LogoIcon,
     NavList
   },
+  data () {
+    return {
+      inputEthAddress: '',
+      savedEthAddress: null
+    }
+  },
   methods: {
     hideInstructions () {
       this.$store.commit(types.HIDE_IDENTITY_MENU)
@@ -119,6 +153,9 @@ export default {
     },
     copyId () {
       clipboard.writeText(this.consumerId)
+    },
+    saveEtherAddress () {
+      this.savedEthAddress = this.inputEthAddress
     }
   },
   computed: {
