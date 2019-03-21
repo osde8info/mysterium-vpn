@@ -34,47 +34,48 @@
           <h1>Mysterium ID</h1>
 
           <div
-            v-if="consumerId"
-            class="consumer-id-view">
-            <div class="consumer-id-view__item">
+            class="flex-line"
+            v-if="consumerId">
+            <div class="flex-line__item">
               <logo-icon :active="registrationFetched"/>
             </div>
-            <div class="consumer-id-view__item">
-              <span
-                class="consumer-id-view__id-text"
-                :class="{'consumer-id-view__id-text--registered': registrationFetched}">
-                {{ consumerId }}
-              </span>
+            <div
+              class="flex-line__item identity-menu__text"
+              :class="{'identity-menu__text--red': !registrationFetched}">
+              {{ consumerId }}
             </div>
-            <div class="consumer-id-view__item">
-              <copy-button :text="consumerId"/>
-            </div>
+            <copy-button
+              class="flex-line__item"
+              :text="consumerId"/>
           </div>
 
           <h2>Ether address</h2>
 
-          <div class="consumer-id-view">
-            <img
-              src="../../../static/icons/ethereum.png"
-              class="consumer-id-view__item icon-ethereum">
+          <div class="flex-line">
             <div
-              class="consumer-id-view__item"
-              v-if="savedEthAddress === null">
-              <input
-                type="text"
-                v-model="inputEthAddress"
-                placeholder="Enter Ether address to receive Bounty rewards">
-              <div
-                class="btn"
-                @click="saveEtherAddress()">
-                OK
-              </div>
+              class="flex-line__item">
+              <img
+                src="../../../static/icons/ethereum.png"
+                class="icon-ethereum">
             </div>
+            <input
+              class="flex-line__item flex-line__item--autosize"
+              type="text"
+              v-if="savedEthAddress === null"
+              v-model="inputEthAddress"
+              placeholder="Enter Ether address to receive Bounty rewards">
             <div
-              class="consumer-id-view__item"
+              class="flex-line__item flex-line__item--autosize identity-menu__text"
               v-if="savedEthAddress !== null">
               {{ savedEthAddress }}
             </div>
+          </div>
+
+          <div
+            v-if="savedEthAddress === null"
+            class="btn"
+            @click="saveEtherAddress()">
+            OK
           </div>
 
           <div
