@@ -38,7 +38,7 @@
       <div class="control__bottom">
         <div
           class="control__action btn"
-          :class="{'btn--transparent':true}"
+          :class="{'btn--transparent': isButtonActive}"
           @click="toggleService">
           {{ buttonText }}
         </div>
@@ -123,6 +123,12 @@ export default {
   },
   computed: {
     ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
+    pendingRequests () {
+      return this.pendingStartRequest || this.pendingStopRequest
+    },
+    isButtonActive () {
+      return this.status !== ServiceStatus.NOT_RUNNING || this.pendingRequests
+    },
     statusText () {
       const notRunning = 'Stopped'
       const starting = 'Starting..'
@@ -170,7 +176,7 @@ export default {
   methods: {
     ...mapMutations({ hideErr: type.HIDE_ERROR }),
     async toggleService () {
-      if (this.pendingStartRequest || this.pendingStopRequest) {
+      if (this.pendingRequests) {
         return
       }
 
@@ -191,13 +197,11 @@ export default {
       this.pendingStartRequest = true
 
       try {
-        // TODO: before starting service, ensure that VPN service has finished stopping
         await this.providerService.start(this.currentIdentity)
 
         this.$store.commit(type.HIDE_ERROR)
       } catch (e) {
         this.$store.commit(type.SHOW_ERROR_MESSAGE, 'Failed to start the service: ' + e.message)
-        // TODO: hide this error message if starting service succeeds after another try
         logger.warn(e)
       }
 
@@ -241,7 +245,7 @@ export default {
         return
       }
 
-      if (this.status !== ServiceStatus.NOT_RUNNING || this.pendingStartRequest || this.pendingStopRequest) {
+      if (this.status !== ServiceStatus.NOT_RUNNING || this.pendingRequests) {
         this.showTabModal = true
         return
       }
