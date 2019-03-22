@@ -59,9 +59,7 @@
             </div>
           </transition>
           <div class="stats__block">
-            <div class="stats__label">CONNECTED</div>
-            <div class="stats__value">{{ users }}</div>
-            <div class="stats__unit">USERS</div>
+            <div class="stats__unit"><a href="#" @click="openStatsPage()" title="Open dashboard of current service">STATISTICS</a></div>
           </div>
         </div>
       </div>
@@ -79,6 +77,7 @@ import logger from '../../app/logger'
 import Identity from '../components/identity'
 import AppModal from '../partials/app-modal'
 import TabNavigationModal from '../components/tab-navigation-modal'
+import { shell } from 'electron'
 
 export default {
   name: 'Main',
@@ -92,7 +91,8 @@ export default {
   dependencies: [
     'tequilapiClient',
     'bugReporter',
-    'providerService'
+    'providerService',
+    'dashboardBaseUrl'
   ],
   data () {
     return {
@@ -226,6 +226,7 @@ export default {
       // TODO: show error if status changes from "Starting" to "NotRunning"
       // TODO: show error if service ends unexpectedly, without stoping service
     },
+
     async stopAndGoToVpn () {
       try {
         await this.providerService.stop()
@@ -254,6 +255,14 @@ export default {
     },
     goToVpn () {
       this.$router.push('/vpn')
+    },
+
+    openStatsPage () {
+      shell.openExternal(this.getProviderStatsLink(this.currentIdentity, 'openvpn'))
+    },
+
+    getProviderStatsLink (providerId, serviceType) {
+      return this.dashboardBaseUrl + '/node/' + providerId + '/' + serviceType
     }
   }
 }
