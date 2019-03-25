@@ -125,7 +125,7 @@ import LogoIcon from './logo-icon'
 
 export default {
   name: 'IdentityRegistration',
-  dependencies: ['rendererCommunication', 'getPaymentLink', 'featureToggle'],
+  dependencies: ['rendererCommunication', 'getPaymentLink', 'featureToggle', 'tequilapiClient', 'identityManager'],
   components: {
     CloseButton,
     CopyButton,
@@ -152,7 +152,12 @@ export default {
     copyId () {
       clipboard.writeText(this.consumerId)
     },
-    saveEtherAddress () {
+    async saveEtherAddress () {
+      const identity = this.identityManager.currentIdentity
+      if (!identity) {
+        throw new Error('Current identity is missing, cannot update identity payout')
+      }
+      await this.tequilapiClient.updateIdentityPayout(identity.id, this.inputEthAddress)
       this.savedEthAddress = this.inputEthAddress
     }
   },

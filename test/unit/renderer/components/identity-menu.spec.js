@@ -31,6 +31,7 @@ import types from '../../../../src/renderer/store/types'
 import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
 import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import IdentityManager from '../../../../src/app/identity-manager'
 
 describe('IdentityMenu', () => {
   let rendererCommunication: RendererCommunication
@@ -46,11 +47,13 @@ describe('IdentityMenu', () => {
     const messageBus = new DirectMessageBus()
     rendererCommunication = buildRendererCommunication(messageBus)
 
+    const tequilapi = new EmptyTequilapiClientMock()
     dependencies.constant('rendererCommunication', rendererCommunication)
     dependencies.constant('getPaymentLink', () => {})
     dependencies.constant('featureToggle', new FeatureToggle({ payments: true }))
+    dependencies.constant('tequilapiClient', tequilapi)
+    dependencies.constant('identityManager', new IdentityManager(tequilapi))
 
-    const tequilapi = new EmptyTequilapiClientMock()
     const identity = {
       ...identityStoreFactory(),
       state: { current: currentIdentity }

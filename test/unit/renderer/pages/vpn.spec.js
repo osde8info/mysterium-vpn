@@ -37,6 +37,7 @@ import CountryImageResolver from '../../../../src/app/countries/unknown-country-
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
 import { DurationFormatter } from '../../../../src/libraries/formatters/duration-formatter'
 import { BytesFormatter } from '../../../../src/libraries/formatters/bytes-formatter'
+import IdentityManager from '../../../../src/app/identity-manager'
 
 describe('Vpn', () => {
   let vpnWrapper
@@ -49,6 +50,7 @@ describe('Vpn', () => {
     fakeMessageBus = new FakeMessageBus()
     const startupEventTracker = new StartupEventTracker(new MockEventSender())
     const communication = buildRendererCommunication(fakeMessageBus)
+    const tequilapi = new EmptyTequilapiClientMock()
     const dependencies = new DIContainer(vue)
     dependencies.constant('rendererCommunication', communication)
     dependencies.constant('bugReporter', bugReporterMock)
@@ -60,6 +62,8 @@ describe('Vpn', () => {
     dependencies.constant('durationFormatter', new DurationFormatter())
     dependencies.constant('bytesFormatter', new BytesFormatter())
     dependencies.constant('providerService', { isActive: async () => false })
+    dependencies.constant('tequilapiClient', tequilapi)
+    dependencies.constant('identityManager', new IdentityManager(tequilapi))
 
     const store = new Store({
       getters: {
@@ -76,7 +80,7 @@ describe('Vpn', () => {
         }
       },
       modules: {
-        main: mainStoreFactory(new EmptyTequilapiClientMock(), new MockEventSender()),
+        main: mainStoreFactory(tequilapi, new MockEventSender()),
         identity: identityStoreFactory()
       }
     })

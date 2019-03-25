@@ -31,10 +31,10 @@ const PASSWORD = ''
 class IdentityManager {
   _tequilapi: TequilapiClient
 
-  _identity: ?IdentityDTO = null
+  _currentIdentity: ?IdentityDTO = null
   _registration: ?IdentityRegistrationDTO
 
-  _identityPublisher: Publisher<IdentityDTO> = new Publisher()
+  _currentIdentityPublisher: Publisher<IdentityDTO> = new Publisher()
   _registrationPublisher: Publisher<IdentityRegistrationDTO> = new Publisher()
   _errorMessagePublisher: Publisher<string> = new Publisher()
 
@@ -51,9 +51,12 @@ class IdentityManager {
     }
   }
 
-  // TODO: unify naming
+  get currentIdentity (): ?IdentityDTO {
+    return this._currentIdentity
+  }
+
   onCurrentIdentityChange (callback: IdentityDTO => void) {
-    this._identityPublisher.addSubscriber(callback)
+    this._currentIdentityPublisher.addSubscriber(callback)
   }
 
   setRegistration (registration: IdentityRegistrationDTO) {
@@ -97,8 +100,8 @@ class IdentityManager {
   }
 
   _setCurrentIdentity (identity: IdentityDTO) {
-    this._identity = identity
-    this._identityPublisher.publish(identity)
+    this._currentIdentity = identity
+    this._currentIdentityPublisher.publish(identity)
   }
 
   // TODO: this class should not show errors in case VpnInitializer is run with multiple retries
