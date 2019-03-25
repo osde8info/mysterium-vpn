@@ -7862,10 +7862,10 @@ mysterium-tequilapi@^0.7.3:
     "@babel/runtime" "^7.1.5"
     axios "^0.18.0"
 
-mysterium-vpn-js@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-0.0.8.tgz#9ff51f82570adf91c12b28293106bfe09c10c735"
-  integrity sha512-UPRkffIUX7y6age1E4XLDVTGKLOhrh2G7M+IUganLy/0txj+gdBz5tugzILtsl4yMMLAMQBF+/5DifPip4dz2Q==
+mysterium-vpn-js@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-0.0.9.tgz#c1d9c17d96479d7c4da329fac264ed19f93b2a95"
+  integrity sha512-NcaHgkbKI423++5lNmo3HwV9JnEkuxNLuv4lt92bAMgl6J49HsLi38rMDec6pSgj7Jsl0fUpBhwcM0eQPldP2g==
   dependencies:
     filesize "^4.1.2"
     mysterium-tequilapi "^0.7.3"
