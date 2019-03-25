@@ -143,19 +143,20 @@ export default {
       }
     },
     buttonText () {
-      if (this.pendingStartRequest || this.pendingStopRequest) {
-        return 'Please wait...'
+      if (this.pendingStartRequest) {
+        return 'Starting..'
+      }
+
+      if (this.pendingStopRequest) {
+        return 'Stopping..'
       }
 
       const notRunning = 'Start service'
-      const starting = 'Starting..'
       const running = 'Stop service'
 
       switch (this.status) {
         case ServiceStatus.NOT_RUNNING:
           return notRunning
-        case ServiceStatus.STARTING:
-          return starting
         case ServiceStatus.RUNNING:
           return running
         default:
@@ -222,7 +223,16 @@ export default {
       // TODO: show error if service ends unexpectedly, without stoping service
     },
     async stopAndGoToVpn () {
-      await this.providerService.stop()
+      try {
+        await this.providerService.stop()
+      } catch (e) {
+        const message = 'Failed to stop service during navigation:' + e.message
+
+        this.$store.commit(type.SHOW_ERROR_MESSAGE, message)
+        this.bugReporter.captureErrorMessage(message)
+
+        return
+      }
 
       this.goToVpn()
     },
