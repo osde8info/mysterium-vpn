@@ -241,7 +241,7 @@ export default {
         return
       }
 
-      if (this.status !== ServiceStatus.NOT_RUNNING || this.pendingStartRequest) {
+      if (this.status !== ServiceStatus.NOT_RUNNING || this.pendingStartRequest || this.pendingStopRequest) {
         this.showTabModal = true
         return
       }

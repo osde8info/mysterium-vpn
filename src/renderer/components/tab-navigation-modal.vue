@@ -28,11 +28,11 @@
       <a
         href="#"
         @click.prevent="onContinue"
-        class="modal-button">Yes, continue</a>
+        class="modal__button">Yes, continue</a>
       <a
         href="#"
         @click.prevent="onCancel"
-        class="modal-button">No, stay</a>
+        class="modal__button">No, stay</a>
     </div>
   </app-modal>
 </template>

@@ -34,7 +34,7 @@
 
       <div class="control__top">
         <h1
-          :class="{'is-grey':status===STATUS_NOT_CONNECTED}"
+          :class="{'is-grey':isNotConnected}"
           v-text="statusTitle"/>
         <div
           class="control__location">
@@ -52,7 +52,7 @@
             :countries-are-loading="countriesAreLoading"
             :fetch-countries="fetchCountries"
             @selected="setCountry"
-            :class="{'is-disabled': status!==STATUS_NOT_CONNECTED}"/>
+            :class="{'is-disabled': !isNotConnected}"/>
           <favorite-button
             style="flex:1 0 0; text-align:left;"
             :country="country"
@@ -141,6 +141,9 @@ export default {
     },
     providerCountry () {
       return this.country ? this.country.code : null
+    },
+    isNotConnected () {
+      return this.status === STATUS_NOT_CONNECTED
     }
   },
   methods: {
@@ -173,7 +176,7 @@ export default {
         return
       }
 
-      if (this.status !== STATUS_NOT_CONNECTED) {
+      if (!this.isNotConnected) {
         this.showTabModal = true
         return
       }
@@ -181,8 +184,17 @@ export default {
       this.goToProviderPage()
     },
     async stopAndGoToProviderPage () {
-      if (this.status !== STATUS_NOT_CONNECTED) {
-        await this.$store.dispatch(type.DISCONNECT)
+      if (!this.isNotConnected) {
+        try {
+          await this.$store.dispatch(type.DISCONNECT)
+        } catch (e) {
+          const message = 'Failed to stop VPN during navigation:' + e.message
+
+          this.$store.commit(type.SHOW_ERROR_MESSAGE, message)
+          this.bugReporter.captureErrorMessage(message)
+
+          return
+        }
       }
 
       this.goToProviderPage()
