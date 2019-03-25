@@ -21,9 +21,11 @@ import type { Container } from '../../../app/di'
 import { ProviderService } from 'mysterium-vpn-js/lib/domain/provider-service'
 
 export default function bootstrap (container: Container) {
+  container.constant('providerConfig', {
+    'baseURL': 'https://testnet.mysterium.network',
+    'serviceType': 'openvpn'
+  })
   container.service('providerService', ['tequilapiClient'], tequilapiClient => {
-    return new ProviderService(tequilapiClient, PROVIDER_SERVICE_TYPE)
+    return new ProviderService(tequilapiClient)
   })
 }
-
-const PROVIDER_SERVICE_TYPE = 'openvpn'

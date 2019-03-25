@@ -59,9 +59,12 @@
             </div>
           </transition>
           <div class="stats__block">
-            <div class="stats__label">CONNECTED</div>
-            <div class="stats__value">{{ users }}</div>
-            <div class="stats__unit">USERS</div>
+            <div class="stats__unit">
+              <a
+                @click="openStatsPage()"
+                title="Open dashboard of current service"
+              >STATISTICS</a>
+            </div>
           </div>
         </div>
       </div>
@@ -79,6 +82,7 @@ import logger from '../../app/logger'
 import Identity from '../components/identity'
 import AppModal from '../partials/app-modal'
 import TabNavigationModal from '../components/tab-navigation-modal'
+import { shell } from 'electron'
 
 export default {
   name: 'Main',
@@ -92,7 +96,8 @@ export default {
   dependencies: [
     'tequilapiClient',
     'bugReporter',
-    'providerService'
+    'providerService',
+    'providerConfig'
   ],
   data () {
     return {
@@ -197,7 +202,8 @@ export default {
       this.pendingStartRequest = true
 
       try {
-        await this.providerService.start(this.currentIdentity)
+        // TODO: before starting service, ensure that VPN service has finished stopping
+        await this.providerService.start(this.currentIdentity, this.providerConfig.serviceType)
 
         this.$store.commit(type.HIDE_ERROR)
       } catch (e) {
@@ -226,6 +232,7 @@ export default {
       // TODO: show error if status changes from "Starting" to "NotRunning"
       // TODO: show error if service ends unexpectedly, without stoping service
     },
+
     async stopAndGoToVpn () {
       try {
         await this.providerService.stop()
@@ -254,6 +261,14 @@ export default {
     },
     goToVpn () {
       this.$router.push('/vpn')
+    },
+
+    openStatsPage () {
+      shell.openExternal(this.getProviderStatsLink(this.currentIdentity, this.providerConfig.serviceType))
+    },
+
+    getProviderStatsLink (providerId, serviceType) {
+      return this.providerConfig.baseURL + '/node/' + providerId + '/' + serviceType
     }
   }
 }
