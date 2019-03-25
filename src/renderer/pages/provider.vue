@@ -59,7 +59,12 @@
             </div>
           </transition>
           <div class="stats__block">
-            <div class="stats__unit"><a href="#" @click="openStatsPage()" title="Open dashboard of current service">STATISTICS</a></div>
+            <div class="stats__unit">
+              <a
+                @click="openStatsPage()"
+                title="Open dashboard of current service"
+              >STATISTICS</a>
+            </div>
           </div>
         </div>
       </div>
