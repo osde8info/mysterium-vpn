@@ -34,7 +34,7 @@
 
       <div class="control__top">
         <h1
-          :class="{'is-grey':statusCode===-1}"
+          :class="{'is-grey':status===STATUS_NOT_CONNECTED}"
           v-text="statusTitle"/>
         <div
           class="control__location">
@@ -52,7 +52,7 @@
             :countries-are-loading="countriesAreLoading"
             :fetch-countries="fetchCountries"
             @selected="setCountry"
-            :class="{'is-disabled': statusCode!==-1}"/>
+            :class="{'is-disabled': status!==STATUS_NOT_CONNECTED}"/>
           <favorite-button
             style="flex:1 0 0; text-align:left;"
             :country="country"
@@ -97,6 +97,7 @@ import FavoriteButton from '../components/favorite-button'
 import Tabs from '../components/tabs'
 import Identity from '../components/identity'
 import TabNavigationModal from '../components/tab-navigation-modal'
+import { STATUS_NOT_CONNECTED } from '../../app/connection/connection-status'
 
 export default {
   name: 'Main',
@@ -127,16 +128,6 @@ export default {
   },
   computed: {
     ...mapGetters(['connection', 'status', 'ip', 'errorMessage', 'showError']),
-    statusCode () {
-      switch (this.status) {
-        case 'NotConnected':
-          return -1
-        case 'Connecting':
-          return 0
-        case 'Connected':
-          return 1
-      }
-    },
     statusTitle () {
       switch (this.status) {
         case 'NotConnected':
@@ -182,7 +173,7 @@ export default {
         return
       }
 
-      if (this.statusCode > -1) {
+      if (this.status !== STATUS_NOT_CONNECTED) {
         this.showTabModal = true
         return
       }
@@ -190,7 +181,7 @@ export default {
       this.goToProviderPage()
     },
     async stopAndGoToProviderPage () {
-      if (this.statusCode > -1) {
+      if (this.status !== STATUS_NOT_CONNECTED) {
         await this.$store.dispatch(type.DISCONNECT)
       }
 
