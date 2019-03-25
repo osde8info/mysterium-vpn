@@ -19,9 +19,17 @@
   <div class="page">
     <Identity/>
 
-    <div class="page__control control">
+    <tab-navigation-modal
+      v-if="showTabModal"
+      to="vpn"
+      :on-continue="stopAndGoToVpn"
+      :on-cancel="() => showTabModal = false"
+    >
+      Navigating to the VPN page will stop the service.
+    </tab-navigation-modal>
 
-      <tabs/>
+    <div class="page__control control">
+      <tabs :on-click="onTabClick"/>
 
       <div class="control__top">
         <h1>{{ statusText }}</h1>
@@ -30,7 +38,7 @@
       <div class="control__bottom">
         <div
           class="control__action btn"
-          :class="{'btn--transparent':true, 'btn--disabled': pendingRequest}"
+          :class="{'btn--transparent': isButtonActive}"
           @click="toggleService">
           {{ buttonText }}
         </div>
@@ -67,13 +75,16 @@ import { mapMutations, mapGetters } from 'vuex'
 import AppError from '../partials/app-error'
 import Tabs from '../components/tabs'
 import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
-import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
 import logger from '../../app/logger'
 import Identity from '../components/identity'
+import AppModal from '../partials/app-modal'
+import TabNavigationModal from '../components/tab-navigation-modal'
 
 export default {
   name: 'Main',
   components: {
+    TabNavigationModal,
+    AppModal,
     Tabs,
     Identity,
     AppError
@@ -86,7 +97,9 @@ export default {
   data () {
     return {
       status: ServiceStatus.NOT_RUNNING,
-      pendingRequest: false,
+      pendingStartRequest: false,
+      pendingStopRequest: false,
+      showTabModal: false,
       users: 0
     }
   },
@@ -100,11 +113,6 @@ export default {
     // reset any error messages from VPN page
     this.$store.commit(type.HIDE_ERROR)
 
-    // disconnect from VPN if still connected
-    if (this.$store.getters.status !== ConnectionStatus.NOT_CONNECTED) {
-      this.$store.dispatch(type.DISCONNECT)
-    }
-
     // stop statistics fetching
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.CONNECTION_IP)
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.FETCH_CONNECTION_STATUS)
@@ -115,6 +123,12 @@ export default {
   },
   computed: {
     ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
+    pendingRequests () {
+      return this.pendingStartRequest || this.pendingStopRequest
+    },
+    isButtonActive () {
+      return this.status !== ServiceStatus.NOT_RUNNING || this.pendingRequests
+    },
     statusText () {
       const notRunning = 'Stopped'
       const starting = 'Starting..'
@@ -135,19 +149,20 @@ export default {
       }
     },
     buttonText () {
-      if (this.pendingRequest) {
-        return 'Please wait...'
+      if (this.pendingStartRequest) {
+        return 'Starting..'
+      }
+
+      if (this.pendingStopRequest) {
+        return 'Stopping..'
       }
 
       const notRunning = 'Start service'
-      const starting = 'Starting..'
       const running = 'Stop service'
 
       switch (this.status) {
         case ServiceStatus.NOT_RUNNING:
           return notRunning
-        case ServiceStatus.STARTING:
-          return starting
         case ServiceStatus.RUNNING:
           return running
         default:
@@ -161,7 +176,7 @@ export default {
   methods: {
     ...mapMutations({ hideErr: type.HIDE_ERROR }),
     async toggleService () {
-      if (this.pendingRequest) {
+      if (this.pendingRequests) {
         return
       }
 
@@ -179,24 +194,22 @@ export default {
     },
 
     async startService () {
-      this.pendingRequest = true
+      this.pendingStartRequest = true
 
       try {
-        // TODO: before starting service, ensure that VPN service has finished stopping
         await this.providerService.start(this.currentIdentity)
 
         this.$store.commit(type.HIDE_ERROR)
       } catch (e) {
         this.$store.commit(type.SHOW_ERROR_MESSAGE, 'Failed to start the service: ' + e.message)
-        // TODO: hide this error message if starting service succeeds after another try
         logger.warn(e)
       }
 
-      this.pendingRequest = false
+      this.pendingStartRequest = false
     },
 
     async stopService () {
-      this.pendingRequest = true
+      this.pendingStopRequest = true
 
       try {
         await this.providerService.stop()
@@ -205,13 +218,42 @@ export default {
         logger.warn(e)
       }
 
-      this.pendingRequest = false
+      this.pendingStopRequest = false
     },
 
     onStatusChange (newStatus) {
       this.status = newStatus
       // TODO: show error if status changes from "Starting" to "NotRunning"
       // TODO: show error if service ends unexpectedly, without stoping service
+    },
+    async stopAndGoToVpn () {
+      try {
+        await this.providerService.stop()
+      } catch (e) {
+        const message = 'Failed to stop service during navigation:' + e.message
+
+        this.$store.commit(type.SHOW_ERROR_MESSAGE, message)
+        this.bugReporter.captureErrorMessage(message)
+
+        return
+      }
+
+      this.goToVpn()
+    },
+    async onTabClick (page) {
+      if (page !== 'vpn') {
+        return
+      }
+
+      if (this.status !== ServiceStatus.NOT_RUNNING || this.pendingRequests) {
+        this.showTabModal = true
+        return
+      }
+
+      this.goToVpn()
+    },
+    goToVpn () {
+      this.$router.push('/vpn')
     }
   }
 }

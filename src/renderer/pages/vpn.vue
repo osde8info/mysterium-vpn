@@ -17,15 +17,24 @@
 
 <template>
   <div class="page">
+    <tab-navigation-modal
+      v-if="showTabModal"
+      :on-continue="stopAndGoToProviderPage"
+      :on-cancel="() => showTabModal = false"
+    >
+      Navigating to the Service page will stop the VPN connection.
+    </tab-navigation-modal>
     <Identity/>
 
     <div class="page__control control">
 
-      <tabs/>
+      <tabs
+        :on-click="onTabClick"
+      />
 
       <div class="control__top">
         <h1
-          :class="{'is-grey':statusCode===-1}"
+          :class="{'is-grey':isNotConnected}"
           v-text="statusTitle"/>
         <div
           class="control__location">
@@ -43,7 +52,7 @@
             :countries-are-loading="countriesAreLoading"
             :fetch-countries="fetchCountries"
             @selected="setCountry"
-            :class="{'is-disabled': statusCode!==-1}"/>
+            :class="{'is-disabled': !isNotConnected}"/>
           <favorite-button
             style="flex:1 0 0; text-align:left;"
             :country="country"
@@ -87,10 +96,13 @@ import { ActionLooperConfig } from '../store/modules/connection'
 import FavoriteButton from '../components/favorite-button'
 import Tabs from '../components/tabs'
 import Identity from '../components/identity'
+import TabNavigationModal from '../components/tab-navigation-modal'
+import { STATUS_NOT_CONNECTED } from '../../app/connection/connection-status'
 
 export default {
   name: 'Main',
   components: {
+    TabNavigationModal,
     Identity,
     Tabs,
     FavoriteButton,
@@ -103,27 +115,19 @@ export default {
     'bugReporter',
     'rendererCommunication',
     'startupEventTracker',
-    'userSettingsStore'
+    'userSettingsStore',
+    'providerService'
   ],
   data () {
     return {
       country: null,
       countryList: [],
-      countriesAreLoading: false
+      countriesAreLoading: false,
+      showTabModal: false
     }
   },
   computed: {
     ...mapGetters(['connection', 'status', 'ip', 'errorMessage', 'showError']),
-    statusCode () {
-      switch (this.status) {
-        case 'NotConnected':
-          return -1
-        case 'Connecting':
-          return 0
-        case 'Connected':
-          return 1
-      }
-    },
     statusTitle () {
       switch (this.status) {
         case 'NotConnected':
@@ -137,6 +141,9 @@ export default {
     },
     providerCountry () {
       return this.country ? this.country.code : null
+    },
+    isNotConnected () {
+      return this.status === STATUS_NOT_CONNECTED
     }
   },
   methods: {
@@ -158,13 +165,51 @@ export default {
     onCountriesUpdate (countries) {
       this.countriesAreLoading = false
 
-      if (countries.length < 1) this.bugReporter.captureInfoMessage('Renderer received empty countries list')
+      if (countries.length < 1) {
+        this.bugReporter.captureInfoMessage('Renderer received empty countries list')
+      }
 
       this.countryList = countries
+    },
+    onTabClick (page) {
+      if (page !== 'provider') {
+        return
+      }
+
+      if (!this.isNotConnected) {
+        this.showTabModal = true
+        return
+      }
+
+      this.goToProviderPage()
+    },
+    async stopAndGoToProviderPage () {
+      if (!this.isNotConnected) {
+        try {
+          await this.$store.dispatch(type.DISCONNECT)
+        } catch (e) {
+          const message = 'Failed to stop VPN during navigation:' + e.message
+
+          this.$store.commit(type.SHOW_ERROR_MESSAGE, message)
+          this.bugReporter.captureErrorMessage(message)
+
+          return
+        }
+      }
+
+      this.goToProviderPage()
+    },
+    goToProviderPage () {
+      this.$router.push('/provider')
     }
   },
   async mounted () {
     this.startupEventTracker.sendAppStartSuccessEvent()
+
+    if (await this.providerService.isActive()) {
+      return this.goToProviderPage()
+    }
+
     this.rendererCommunication.countryUpdate.on(this.onCountriesUpdate)
 
     // TODO: do not start loopers each time this page is mounted, or stop loopers when in .beforeDestroy
