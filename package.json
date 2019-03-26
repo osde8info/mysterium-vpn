@@ -28,6 +28,7 @@
     "unit:run": "karma run test/unit/karma.conf.js",
     "packages:check-outdated": "yarn outdated --json | node ./util_scripts/outdated-dependencies.js",
     "ci": "util_scripts/check-headers.sh && yarn flow && yarn lint && yarn unit && yarn test:integration && yarn test:coverage && yarn packages:check-outdated",
+    "update-myst-binary": "yarn download-mysterium-client && cp -r ./node_modules/mysterium-client-bin/bin/* ./bin/",
     "postinstall": "mkdir -p ./bin && cp -r ./node_modules/mysterium-client-bin/bin/* ./bin/"
   },
   "build": {
@@ -113,8 +114,8 @@
     "lolex": "^2.7.4",
     "md5": "^2.2.1",
     "mysterium-client-bin": "0.0.0-dev",
-    "mysterium-tequilapi": "^0.7.3",
-    "mysterium-vpn-js": "^0.0.9",
+    "mysterium-tequilapi": "^0.7.5",
+    "mysterium-vpn-js": "^0.0.11",
     "os-name": "^2.0.1",
     "raven": "^2.4.1",
     "raven-js": "^3.22.3",
