@@ -22,6 +22,7 @@ import TrayMenuBuilder from './menu-builder'
 import translations from './translations'
 import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
 import type { Country } from '../../app/countries/country'
+import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 const TrayIcon = {
   active: 'active',
@@ -44,6 +45,7 @@ class Tray {
   _templateBuilder: Function
   _canUpdateItems: boolean = true
   _connectionStatus: ConnectionStatus
+  _providerServiceStatus: ServiceStatus
   _iconPath: string
 
   constructor (
@@ -82,7 +84,7 @@ class Tray {
     this._update()
   }
 
-  setStatus (status: ConnectionStatus) {
+  setConnectionStatus (status: ConnectionStatus) {
     if (this._connectionStatus === status) {
       return
     }
@@ -105,6 +107,10 @@ class Tray {
 
     this._menuBuilder.updateConnectionStatus(status)
     this._update()
+  }
+
+  setProviderServiceStatus (status: ServiceStatus) {
+    this._providerServiceStatus = status
   }
 
   _setupOpeningEvents () {

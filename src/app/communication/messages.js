@@ -47,6 +47,8 @@ export default {
   USER_SETTINGS_REQUEST: 'user.settings.request',
   USER_SETTINGS_UPDATE: 'user.settings.update',
 
+  PROVIDER_SERVICE_STATUS_CHANGED: 'provider-service.status.changed',
+
   // sync messages
   GET_SESSION_ID: 'GET_SESSION_ID',
   GET_SERIALIZED_CACHES: 'GET_SERIALIZED_CACHES',

@@ -97,7 +97,8 @@ export default {
     'tequilapiClient',
     'bugReporter',
     'providerService',
-    'providerConfig'
+    'providerConfig',
+    'rendererCommunication'
   ],
   data () {
     return {
@@ -229,6 +230,7 @@ export default {
 
     onStatusChange (newStatus) {
       this.status = newStatus
+      this.rendererCommunication.providerServiceStatusChanged.send(newStatus)
       // TODO: show error if status changes from "Starting" to "NotRunning"
       // TODO: show error if service ends unexpectedly, without stoping service
     },

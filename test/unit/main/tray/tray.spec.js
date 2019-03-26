@@ -99,7 +99,7 @@ describe('tray', () => {
       })
     })
 
-    describe('.setStatus', () => {
+    describe('.setConnectionStatus', () => {
       it('calls updateConnectionStatus and setContextMenu', () => {
         let calledUpdateConnectionStatus = false
         let calledSetContextMenu = false
@@ -119,7 +119,7 @@ describe('tray', () => {
         const tray = new Tray(factory, (items) => items, menuItemBuilder, iconPath)
 
         tray.build()
-        tray.setStatus(ConnectionStatus.CONNECTED)
+        tray.setConnectionStatus(ConnectionStatus.CONNECTED)
 
         expect(calledSetContextMenu).to.equal(true)
         expect(calledUpdateConnectionStatus).to.equal(true)
