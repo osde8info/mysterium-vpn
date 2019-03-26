@@ -18,6 +18,8 @@
 // @flow
 import type { ConnectionIPDTO } from 'mysterium-tequilapi/lib/dto/connection-ip'
 import type { ConnectionStatusDTO } from 'mysterium-tequilapi/lib/dto/connection-status-dto'
+import type { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
+import type { ServiceSessionDTO } from 'mysterium-tequilapi/lib/dto/service-session'
 import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connection-statistics'
 import { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
@@ -27,7 +29,6 @@ import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-l
 import type { NodeHealthcheckDTO } from 'mysterium-tequilapi/lib/dto/node-healthcheck'
 import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
 import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
-import { SessionDTO } from 'mysterium-tequilapi/lib/dto/session'
 import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
 import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
 import { ServiceStatus } from 'mysterium-tequilapi/lib/dto/service-status'
@@ -65,6 +66,9 @@ class EmptyTequilapiClientMock implements TequilapiClient {
     return { registered: true }
   }
 
+  async updateIdentityPayout (id: string, ethAddress: string): Promise<void> {
+  }
+
   async findProposals (query: ?ProposalQueryOptions): Promise<Array<ProposalDTO>> {
     return []
   }
@@ -92,12 +96,12 @@ class EmptyTequilapiClientMock implements TequilapiClient {
     }
   }
 
-  async location (): Promise<ConsumerLocationDTO> {
-    return {}
+  async connectionSessions (): Promise<ConnectionSessionDTO[]> {
+    return []
   }
 
-  async sessionsList (): Promise<SessionDTO[]> {
-    return []
+  async location (): Promise<ConsumerLocationDTO> {
+    return {}
   }
 
   async serviceList (): Promise<ServiceInfoDTO[]> {
@@ -113,6 +117,10 @@ class EmptyTequilapiClientMock implements TequilapiClient {
   }
 
   async serviceStop (serviceId: string): Promise<void> {
+  }
+
+  async serviceSessions (): Promise<ServiceSessionDTO[]> {
+    return []
   }
 }
 

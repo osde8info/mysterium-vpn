@@ -42,7 +42,7 @@ export class SessionItemList {
   }
 
   async fetchItems (): Promise<SessionItem[]> {
-    const sessions = await this._client.sessionsList()
+    const sessions = await this._client.connectionSessions()
     sessions.sort((a, b) => this._compareSessions(a, b))
     return sessions.map(session => this._sessionDTOToSessionItem(session))
   }

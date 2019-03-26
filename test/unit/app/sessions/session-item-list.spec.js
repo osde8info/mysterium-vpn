@@ -20,15 +20,15 @@
 import { beforeEach, describe, expect, it } from '../../../helpers/dependencies'
 import { SessionItemList } from '../../../../src/app/sessions/session-item-list'
 import EmptyTequilapiClientMock from '../../renderer/store/modules/empty-tequilapi-client-mock'
-import { SessionDTO } from 'mysterium-tequilapi/lib/dto/session'
+import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
 import { TimeFormatter } from '../../../../src/libraries/formatters/time-formatter'
 import { DurationFormatter } from '../../../../src/libraries/formatters/duration-formatter'
 import { BytesFormatter } from '../../../../src/libraries/formatters/bytes-formatter'
 
 class SessionListTequilapiClientMock extends EmptyTequilapiClientMock {
-  mockSessions: SessionDTO[] = []
+  mockSessions: ConnectionSessionDTO[] = []
 
-  async sessionsList (): Promise<SessionDTO[]> {
+  async connectionSessions (): Promise<ConnectionSessionDTO[]> {
     return this.mockSessions
   }
 }

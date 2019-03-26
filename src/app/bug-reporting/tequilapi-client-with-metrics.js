@@ -31,7 +31,8 @@ import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-l
 import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identity-registration/identity-registration'
 import type { BugReporterMetrics } from './metrics/bug-reporter-metrics'
 import { METRICS } from './metrics/metrics'
-import { SessionDTO } from 'mysterium-tequilapi/lib/dto/session'
+import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
+import { ServiceSessionDTO } from 'mysterium-tequilapi/lib/dto/service-session'
 import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
 import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
 
@@ -72,6 +73,10 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     const result = await this._client.identityRegistration(id)
     this._bugReporterMetrics.set(METRICS.IDENTITY_REGISTERED, result.registered)
     return result
+  }
+
+  async updateIdentityPayout (id: string, ethAddress: string): Promise<void> {
+    return this._client.updateIdentityPayout(id, ethAddress)
   }
 
   async findProposals (query?: ProposalQueryOptions): Promise<Array<ProposalDTO>> {
@@ -120,8 +125,8 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     return this._client.location(timeout)
   }
 
-  async sessionsList (): Promise<SessionDTO[]> {
-    return this._client.sessionsList()
+  async connectionSessions (): Promise<ConnectionSessionDTO[]> {
+    return this._client.connectionSessions()
   }
 
   async serviceList (): Promise<ServiceInfoDTO[]> {
@@ -138,6 +143,10 @@ class TequilapiClientWithMetrics implements TequilapiClient {
 
   async serviceStop (serviceId: string): Promise<void> {
     return this._client.serviceStop(serviceId)
+  }
+
+  async serviceSessions (): Promise<ServiceSessionDTO[]> {
+    return this._client.serviceSessions()
   }
 }
 

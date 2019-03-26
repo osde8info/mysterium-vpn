@@ -55,7 +55,7 @@ describe('ConnectionHistory', () => {
     localVue.use(VueRouter)
     const dependencies = new DIContainer(localVue)
     dependencies.constant('tequilapiClient', {
-      async sessionsList () {
+      async connectionSessions () {
         return mockedSessions
       }
     })
