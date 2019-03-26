@@ -111,6 +111,8 @@ class Tray {
 
   setProviderServiceStatus (status: ServiceStatus) {
     this._providerServiceStatus = status
+    this._menuBuilder.updateProviderServiceStatus(status)
+    this._update()
   }
 
   _setupOpeningEvents () {

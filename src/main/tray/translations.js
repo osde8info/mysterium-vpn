@@ -25,7 +25,11 @@ const translations = {
   statusDisconnected: 'Status: Disconnected',
   statusConnected: 'Status: Connected',
   statusConnecting: 'Status: Connecting',
-  statusDisconnecting: 'Status: Disconnecting'
+  statusDisconnecting: 'Status: Disconnecting',
+
+  providerServiceStarting: 'Service: Starting',
+  providerServiceRunning: 'Service: Running',
+  providerServiceStopped: 'Service: Stopped'
 }
 
 export default translations

@@ -26,6 +26,7 @@ import TrayMenuSeparator from './menu-item-separator'
 import translations from './translations'
 import messages from '../../app/messages'
 import type { MainCommunication } from '../../app/communication/main-communication'
+import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 function getMenuItems (
   appQuit: Function,
@@ -33,7 +34,8 @@ function getMenuItems (
   toggleDevTools: Function,
   communication: MainCommunication,
   countries: Array<Country>,
-  connectionStatus: ConnectionStatus
+  connectionStatus: ConnectionStatus,
+  providerServiceStatus: ServiceStatus
 ) {
   const disconnect = new TrayMenuItem(
     translations.disconnect,
@@ -67,6 +69,8 @@ function getMenuItems (
 
   const items = new TrayMenu()
   items.addItem(statusItem)
+  const providerServiceStatusItem = new TrayMenuItem(translations.providerServiceStopped).disable()
+  items.addItem(providerServiceStatusItem)
   items.addItem(new TrayMenuSeparator())
   items.addItem(connect)
   items.addItem(disconnect.hide())
@@ -108,6 +112,18 @@ function getMenuItems (
       break
   }
 
+  switch (providerServiceStatus) {
+    case ServiceStatus.NOT_RUNNING:
+      providerServiceStatusItem.setLabel(translations.providerServiceStopped)
+      break
+    case ServiceStatus.STARTING:
+      providerServiceStatusItem.setLabel(translations.providerServiceStarting)
+      break
+    case ServiceStatus.RUNNING:
+      providerServiceStatusItem.setLabel(translations.providerServiceRunning)
+      break
+  }
+
   return items.getItems()
 }
 
@@ -118,6 +134,7 @@ class TrayMenuBuilder {
   _communication: MainCommunication
   _countries: Array<Country> = []
   _connectionStatus: ConnectionStatus
+  _providerServiceStatus: ServiceStatus
 
   constructor (appQuit: Function, showWindow: Function, toggleDevTools: Function, communication: MainCommunication) {
     this._appQuit = appQuit
@@ -138,6 +155,12 @@ class TrayMenuBuilder {
     return this
   }
 
+  updateProviderServiceStatus (status: ServiceStatus): this {
+    this._providerServiceStatus = status
+
+    return this
+  }
+
   build (): Array<Object> {
     return getMenuItems(
       this._appQuit,
@@ -145,7 +168,8 @@ class TrayMenuBuilder {
       this._toggleDevTools,
       this._communication,
       this._countries,
-      this._connectionStatus
+      this._connectionStatus,
+      this._providerServiceStatus
     )
   }
 }
