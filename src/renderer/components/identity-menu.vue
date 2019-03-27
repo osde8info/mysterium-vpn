@@ -138,6 +138,9 @@ export default {
       savedEthAddress: null
     }
   },
+  async created () {
+    this.savedEthAddress = await this.identityManager.fetchEthAddress()
+  },
   methods: {
     hideInstructions () {
       this.$store.commit(types.HIDE_IDENTITY_MENU)

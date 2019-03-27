@@ -35,6 +35,7 @@ import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-ses
 import { ServiceSessionDTO } from 'mysterium-tequilapi/lib/dto/service-session'
 import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
 import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
+import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
 
 class TequilapiClientWithMetrics implements TequilapiClient {
   _bugReporterMetrics: BugReporterMetrics
@@ -73,6 +74,10 @@ class TequilapiClientWithMetrics implements TequilapiClient {
     const result = await this._client.identityRegistration(id)
     this._bugReporterMetrics.set(METRICS.IDENTITY_REGISTERED, result.registered)
     return result
+  }
+
+  async identityPayout (id: string): Promise<IdentityPayoutDTO> {
+    return this._client.identityPayout(id)
   }
 
   async updateIdentityPayout (id: string, ethAddress: string): Promise<void> {

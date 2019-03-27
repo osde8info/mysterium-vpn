@@ -22,6 +22,7 @@ import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identi
 import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import messages from './messages'
 import Publisher from '../libraries/publisher'
+import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 
 const PASSWORD = ''
 
@@ -93,6 +94,22 @@ class IdentityManager {
     }
 
     this._setCurrentIdentity(identity)
+  }
+
+  async fetchEthAddress (): Promise<?string> {
+    if (!this.currentIdentity) {
+      throw new Error('Cannot fetch eth address without current identity')
+    }
+
+    try {
+      const payout = await this._tequilapi.identityPayout(this.currentIdentity.id)
+      return payout.ethAddress
+    } catch (err) {
+      if (err.name === TequilapiError.name && err.isNotFoundError) {
+        return null
+      }
+      throw err
+    }
   }
 
   onErrorMessage (callback: string => void) {

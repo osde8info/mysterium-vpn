@@ -19,7 +19,7 @@
 
 import { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import { TimeFormatter } from '../../libraries/formatters/time-formatter'
-import { SessionDTO } from 'mysterium-tequilapi/lib/dto/session'
+import { ConnectionSessionDTO } from 'mysterium-tequilapi/lib/dto/connection-session'
 import type { SessionItem } from './session-item'
 import { DurationFormatter } from '../../libraries/formatters/duration-formatter'
 import { BytesFormatter } from '../../libraries/formatters/bytes-formatter'
@@ -47,7 +47,7 @@ export class SessionItemList {
     return sessions.map(session => this._sessionDTOToSessionItem(session))
   }
 
-  _compareSessions (a: SessionDTO, b: SessionDTO): number {
+  _compareSessions (a: ConnectionSessionDTO, b: ConnectionSessionDTO): number {
     const aDate = this._parseDate(a.dateStarted)
     const bDate = this._parseDate(b.dateStarted)
 
@@ -79,7 +79,7 @@ export class SessionItemList {
     return date
   }
 
-  _sessionDTOToSessionItem (session: SessionDTO): SessionItem {
+  _sessionDTOToSessionItem (session: ConnectionSessionDTO): SessionItem {
     const date = this._parseDate(session.dateStarted)
     return {
       id: session.sessionId,
