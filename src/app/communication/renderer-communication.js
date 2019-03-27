@@ -21,13 +21,17 @@ import { buildMessageTransports } from './message-transport'
 import type {
   AppErrorDTO,
   ConnectionStatusChangeDTO,
-  CountriesDTO, CurrentIdentityChangeDTO, FavoriteProviderDTO,
-  RequestConnectionDTO, RequestTermsDTO,
+  CountriesDTO,
+  CurrentIdentityChangeDTO,
+  FavoriteProviderDTO,
+  RequestConnectionDTO,
+  RequestTermsDTO,
   TermsAnsweredDTO
 } from './dto'
 import type { UserSettings } from '../user-settings/user-settings'
 import { MessageReceiver } from './message-receiver'
 import { MessageSender } from './message-sender'
+import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 export type RendererCommunication = {
   connectionStatusChanged: MessageSender<ConnectionStatusChangeDTO>,
@@ -56,7 +60,9 @@ export type RendererCommunication = {
   userSettingsSender: MessageSender<UserSettings>,
   userSettingsReceiver: MessageReceiver<UserSettings>,
   userSettingsRequest: MessageSender<void>,
-  userSettingsUpdate: MessageSender<UserSettings>
+  userSettingsUpdate: MessageSender<UserSettings>,
+
+  providerServiceStatusChanged: MessageSender<ServiceStatus>
 }
 
 export function buildRendererCommunication (messageBus: MessageBus): RendererCommunication {
@@ -88,6 +94,8 @@ export function buildRendererCommunication (messageBus: MessageBus): RendererCom
     userSettingsSender: transports.userSettings.buildSender(),
     userSettingsReceiver: transports.userSettings.buildReceiver(),
     userSettingsRequest: transports.userSettingsRequest.buildSender(),
-    userSettingsUpdate: transports.userSettingsUpdate.buildSender()
+    userSettingsUpdate: transports.userSettingsUpdate.buildSender(),
+
+    providerServiceStatusChanged: transports.providerServiceStatusChanged.buildSender()
   }
 }

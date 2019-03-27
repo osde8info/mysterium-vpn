@@ -23,6 +23,7 @@ import Tray from './tray'
 import type { ConnectionStatusChangeDTO } from '../../app/communication/dto'
 import CountryList from '../../app/data-fetchers/country-list'
 import type { MainCommunication } from '../../app/communication/main-communication'
+import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 const trayFactory = (
   communication: MainCommunication,
@@ -49,7 +50,10 @@ const trayFactory = (
   tray.build()
 
   communication.connectionStatusChanged.on((change: ConnectionStatusChangeDTO) => {
-    tray.setStatus(change.newStatus)
+    tray.setVpnConnectionStatus(change.newStatus)
+  })
+  communication.providerServiceStatusChanged.on((status: ServiceStatus) => {
+    tray.setProviderServiceStatus(status)
   })
   countryList.onUpdate(countries => tray.setCountries(countries))
 }

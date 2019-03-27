@@ -26,6 +26,7 @@ import TrayMenuSeparator from './menu-item-separator'
 import translations from './translations'
 import messages from '../../app/messages'
 import type { MainCommunication } from '../../app/communication/main-communication'
+import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
 
 function getMenuItems (
   appQuit: Function,
@@ -33,7 +34,8 @@ function getMenuItems (
   toggleDevTools: Function,
   communication: MainCommunication,
   countries: Array<Country>,
-  connectionStatus: ConnectionStatus
+  vpnStatus: ConnectionStatus,
+  providerServiceStatus: ServiceStatus
 ) {
   const disconnect = new TrayMenuItem(
     translations.disconnect,
@@ -63,10 +65,11 @@ function getMenuItems (
     connectSubmenu
   )
 
-  const statusItem = (new TrayMenuItem(translations.statusDisconnected)).disable()
-
   const items = new TrayMenu()
-  items.addItem(statusItem)
+  const vpnStatusItem = (new TrayMenuItem(translations.vpnStatusDisconnected)).disable()
+  items.addItem(vpnStatusItem)
+  const providerServiceStatusItem = new TrayMenuItem(translations.providerServiceStopped).disable()
+  items.addItem(providerServiceStatusItem)
   items.addItem(new TrayMenuSeparator())
   items.addItem(connect)
   items.addItem(disconnect.hide())
@@ -76,35 +79,47 @@ function getMenuItems (
   items.addItem(new TrayMenuSeparator())
   items.add(translations.quit, () => appQuit(), 'Command+Q')
 
-  switch (connectionStatus) {
+  switch (vpnStatus) {
     case ConnectionStatus.CONNECTED:
       connect.hide()
       disconnect.show()
-      statusItem.setLabel(translations.statusConnected)
+      vpnStatusItem.setLabel(translations.vpnStatusConnected)
       break
 
     case ConnectionStatus.CONNECTING:
       connect.hide()
       disconnect.hide()
-      statusItem.setLabel(translations.statusConnecting)
+      vpnStatusItem.setLabel(translations.vpnStatusConnecting)
       break
 
     case ConnectionStatus.DISCONNECTING:
       connect.hide()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnecting)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnecting)
       break
 
     case ConnectionStatus.NOT_CONNECTED:
       connect.show()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnected)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnected)
       break
 
     default:
       connect.show()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnected)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnected)
+      break
+  }
+
+  switch (providerServiceStatus) {
+    case ServiceStatus.NOT_RUNNING:
+      providerServiceStatusItem.setLabel(translations.providerServiceStopped)
+      break
+    case ServiceStatus.STARTING:
+      providerServiceStatusItem.setLabel(translations.providerServiceStarting)
+      break
+    case ServiceStatus.RUNNING:
+      providerServiceStatusItem.setLabel(translations.providerServiceRunning)
       break
   }
 
@@ -118,6 +133,7 @@ class TrayMenuBuilder {
   _communication: MainCommunication
   _countries: Array<Country> = []
   _connectionStatus: ConnectionStatus
+  _providerServiceStatus: ServiceStatus
 
   constructor (appQuit: Function, showWindow: Function, toggleDevTools: Function, communication: MainCommunication) {
     this._appQuit = appQuit
@@ -138,6 +154,12 @@ class TrayMenuBuilder {
     return this
   }
 
+  updateProviderServiceStatus (status: ServiceStatus): this {
+    this._providerServiceStatus = status
+
+    return this
+  }
+
   build (): Array<Object> {
     return getMenuItems(
       this._appQuit,
@@ -145,7 +167,8 @@ class TrayMenuBuilder {
       this._toggleDevTools,
       this._communication,
       this._countries,
-      this._connectionStatus
+      this._connectionStatus,
+      this._providerServiceStatus
     )
   }
 }

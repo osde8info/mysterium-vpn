@@ -85,44 +85,44 @@ describe('tray', () => {
     describe('.build', () => {
       it('renders menu items without disconnect when not connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.NOT_CONNECTED).build()
-        expect(items[1].type).to.equal(separator)
-        expect(items[2].label).to.equal(translations.connect)
-        expect(items[3].type).to.equal(separator)
-        expect(items[4].label).to.equal(translations.showWindow)
-        expect(items[5].label).to.equal(translations.toggleDeveloperTools)
-        expect(items[6].type).to.equal(separator)
-        expect(items[7].label).to.equal(translations.quit)
+        expect(items[2].type).to.equal(separator)
+        expect(items[3].label).to.equal(translations.connect)
+        expect(items[4].type).to.equal(separator)
+        expect(items[5].label).to.equal(translations.showWindow)
+        expect(items[6].label).to.equal(translations.toggleDeveloperTools)
+        expect(items[7].type).to.equal(separator)
+        expect(items[8].label).to.equal(translations.quit)
       })
 
       it('renders menu items with disconnect when connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
-        expect(items[1].type).to.equal(separator)
-        expect(items[2].label).to.equal(translations.disconnect)
-        expect(items[3].type).to.equal(separator)
-        expect(items[4].label).to.equal(translations.showWindow)
-        expect(items[5].label).to.equal(translations.toggleDeveloperTools)
-        expect(items[6].type).to.equal(separator)
-        expect(items[7].label).to.equal(translations.quit)
+        expect(items[2].type).to.equal(separator)
+        expect(items[3].label).to.equal(translations.disconnect)
+        expect(items[4].type).to.equal(separator)
+        expect(items[5].label).to.equal(translations.showWindow)
+        expect(items[6].label).to.equal(translations.toggleDeveloperTools)
+        expect(items[7].type).to.equal(separator)
+        expect(items[8].label).to.equal(translations.quit)
       })
 
       it('sets status to connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
-        expect(items[0].label).to.equal(translations.statusConnected)
+        expect(items[0].label).to.equal(translations.vpnStatusConnected)
       })
 
       it('sets status to disconnected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.NOT_CONNECTED).build()
-        expect(items[0].label).to.equal(translations.statusDisconnected)
+        expect(items[0].label).to.equal(translations.vpnStatusDisconnected)
       })
 
       it('sets status to connecting', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTING).build()
-        expect(items[0].label).to.equal(translations.statusConnecting)
+        expect(items[0].label).to.equal(translations.vpnStatusConnecting)
       })
 
       it('sets status to disconnecting', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.DISCONNECTING).build()
-        expect(items[0].label).to.equal(translations.statusDisconnecting)
+        expect(items[0].label).to.equal(translations.vpnStatusDisconnecting)
       })
 
       it('renders favourite country with an asterisk (*)', () => {
@@ -145,8 +145,8 @@ describe('tray', () => {
         ])
 
         const items = builder.build()
-        expect(items[2].submenu[0].label).to.include('*')
-        expect(items[2].submenu[1].label).to.not.include('*')
+        expect(items[3].submenu[0].label).to.include('*')
+        expect(items[3].submenu[1].label).to.not.include('*')
       })
 
       it('connects', () => {
@@ -171,7 +171,7 @@ describe('tray', () => {
 
         const recorder = new MessageRecorder(rendererCommunication.connectionRequest)
         expect(recorder.invoked).to.be.false
-        items[2].submenu[0].click()
+        items[3].submenu[0].click()
         expect(recorder.invoked).to.be.true
         expect(recorder.argument).to.eql({ providerId: 'proposalId_123', providerCountry: 'LT' })
       })
@@ -180,30 +180,30 @@ describe('tray', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
         const recorder = new MessageRecorder(rendererCommunication.connectionCancel)
         expect(recorder.invoked).to.be.false
-        items[2].click()
+        items[3].click()
         expect(recorder.invoked).to.be.true
       })
 
       it('shows window', () => {
         const items = builder.build()
         expect(windowIsVisible).to.equal(false)
-        items[4].click()
+        items[5].click()
         expect(windowIsVisible).to.equal(true)
       })
 
       it('quits app', () => {
         const items = builder.build()
         expect(appQuitter.didQuit).to.equal(false)
-        items[7].click()
+        items[8].click()
         expect(appQuitter.didQuit).to.equal(true)
       })
 
       it('toggles developer tools', () => {
         const items = builder.build()
         expect(devToolsToggled).to.equal(false)
-        items[5].click()
+        items[6].click()
         expect(devToolsToggled).to.equal(true)
-        items[5].click()
+        items[6].click()
         expect(devToolsToggled).to.equal(false)
       })
     })

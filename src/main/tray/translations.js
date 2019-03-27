@@ -22,10 +22,14 @@ const translations = {
   showWindow: 'Show window',
   toggleDeveloperTools: 'Toggle developer tools',
   quit: 'Quit',
-  statusDisconnected: 'Status: Disconnected',
-  statusConnected: 'Status: Connected',
-  statusConnecting: 'Status: Connecting',
-  statusDisconnecting: 'Status: Disconnecting'
+  vpnStatusDisconnected: 'VPN: Disconnected',
+  vpnStatusConnected: 'VPN: Connected',
+  vpnStatusConnecting: 'VPN: Connecting',
+  vpnStatusDisconnecting: 'VPN: Disconnecting',
+
+  providerServiceStarting: 'Service: Starting',
+  providerServiceRunning: 'Service: Running',
+  providerServiceStopped: 'Service: Stopped'
 }
 
 export default translations
