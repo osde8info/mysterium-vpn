@@ -107,22 +107,22 @@ describe('tray', () => {
 
       it('sets status to connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
-        expect(items[0].label).to.equal(translations.statusConnected)
+        expect(items[0].label).to.equal(translations.vpnStatusConnected)
       })
 
       it('sets status to disconnected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.NOT_CONNECTED).build()
-        expect(items[0].label).to.equal(translations.statusDisconnected)
+        expect(items[0].label).to.equal(translations.vpnStatusDisconnected)
       })
 
       it('sets status to connecting', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTING).build()
-        expect(items[0].label).to.equal(translations.statusConnecting)
+        expect(items[0].label).to.equal(translations.vpnStatusConnecting)
       })
 
       it('sets status to disconnecting', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.DISCONNECTING).build()
-        expect(items[0].label).to.equal(translations.statusDisconnecting)
+        expect(items[0].label).to.equal(translations.vpnStatusDisconnecting)
       })
 
       it('renders favourite country with an asterisk (*)', () => {

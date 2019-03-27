@@ -34,7 +34,7 @@ function getMenuItems (
   toggleDevTools: Function,
   communication: MainCommunication,
   countries: Array<Country>,
-  connectionStatus: ConnectionStatus,
+  vpnStatus: ConnectionStatus,
   providerServiceStatus: ServiceStatus
 ) {
   const disconnect = new TrayMenuItem(
@@ -65,10 +65,9 @@ function getMenuItems (
     connectSubmenu
   )
 
-  const statusItem = (new TrayMenuItem(translations.statusDisconnected)).disable()
-
   const items = new TrayMenu()
-  items.addItem(statusItem)
+  const vpnStatusItem = (new TrayMenuItem(translations.vpnStatusDisconnected)).disable()
+  items.addItem(vpnStatusItem)
   const providerServiceStatusItem = new TrayMenuItem(translations.providerServiceStopped).disable()
   items.addItem(providerServiceStatusItem)
   items.addItem(new TrayMenuSeparator())
@@ -80,35 +79,35 @@ function getMenuItems (
   items.addItem(new TrayMenuSeparator())
   items.add(translations.quit, () => appQuit(), 'Command+Q')
 
-  switch (connectionStatus) {
+  switch (vpnStatus) {
     case ConnectionStatus.CONNECTED:
       connect.hide()
       disconnect.show()
-      statusItem.setLabel(translations.statusConnected)
+      vpnStatusItem.setLabel(translations.vpnStatusConnected)
       break
 
     case ConnectionStatus.CONNECTING:
       connect.hide()
       disconnect.hide()
-      statusItem.setLabel(translations.statusConnecting)
+      vpnStatusItem.setLabel(translations.vpnStatusConnecting)
       break
 
     case ConnectionStatus.DISCONNECTING:
       connect.hide()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnecting)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnecting)
       break
 
     case ConnectionStatus.NOT_CONNECTED:
       connect.show()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnected)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnected)
       break
 
     default:
       connect.show()
       disconnect.hide()
-      statusItem.setLabel(translations.statusDisconnected)
+      vpnStatusItem.setLabel(translations.vpnStatusDisconnected)
       break
   }
 

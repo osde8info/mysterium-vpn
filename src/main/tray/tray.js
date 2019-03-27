@@ -44,7 +44,7 @@ class Tray {
   _menuBuilder: TrayMenuBuilder
   _templateBuilder: Function
   _canUpdateItems: boolean = true
-  _connectionStatus: ConnectionStatus
+  _vpnConnectionStatus: ConnectionStatus
   _providerServiceStatus: ServiceStatus
   _iconPath: string
 
@@ -84,12 +84,12 @@ class Tray {
     this._update()
   }
 
-  setConnectionStatus (status: ConnectionStatus) {
-    if (this._connectionStatus === status) {
+  setVpnConnectionStatus (status: ConnectionStatus) {
+    if (this._vpnConnectionStatus === status) {
       return
     }
 
-    this._connectionStatus = status
+    this._vpnConnectionStatus = status
 
     switch (status) {
       case ConnectionStatus.CONNECTED:

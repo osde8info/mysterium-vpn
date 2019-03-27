@@ -99,7 +99,7 @@ describe('tray', () => {
       })
     })
 
-    describe('.setConnectionStatus', () => {
+    describe('.setVpnConnectionStatus', () => {
       it('calls updateConnectionStatus and setContextMenu', () => {
         let calledUpdateConnectionStatus = false
         let calledSetContextMenu = false
@@ -119,7 +119,7 @@ describe('tray', () => {
         const tray = new Tray(factory, (items) => items, menuItemBuilder, iconPath)
 
         tray.build()
-        tray.setConnectionStatus(ConnectionStatus.CONNECTED)
+        tray.setVpnConnectionStatus(ConnectionStatus.CONNECTED)
 
         expect(calledSetContextMenu).to.equal(true)
         expect(calledUpdateConnectionStatus).to.equal(true)
