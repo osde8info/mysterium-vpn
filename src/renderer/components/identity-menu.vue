@@ -61,21 +61,27 @@
             <input
               class="flex-line__item flex-line__item--autosize"
               type="text"
-              v-if="savedEthAddress === null"
+              v-if="changingEthAddress"
               v-model="inputEthAddress"
               placeholder="Enter Ether address to receive Bounty rewards">
             <div
               class="flex-line__item flex-line__item--autosize identity-menu__text"
-              v-if="savedEthAddress !== null">
+              v-if="!changingEthAddress">
               {{ savedEthAddress }}
             </div>
           </div>
 
           <div
-            v-if="savedEthAddress === null"
+            v-if="changingEthAddress"
             class="btn"
             @click="saveEtherAddress()">
             OK
+          </div>
+          <div
+            v-if="!changingEthAddress"
+            class="btn"
+            @click="changeEthAddress()">
+            Change
           </div>
 
           <div
@@ -135,11 +141,15 @@ export default {
   data () {
     return {
       inputEthAddress: '',
-      savedEthAddress: null
+      savedEthAddress: null,
+      changingEthAddress: false
     }
   },
   async created () {
     this.savedEthAddress = await this.identityManager.fetchEthAddress()
+    if (!this.savedEthAddress) {
+      this.changingEthAddress = true
+    }
   },
   methods: {
     hideInstructions () {
@@ -155,6 +165,10 @@ export default {
     copyId () {
       clipboard.writeText(this.consumerId)
     },
+    async changeEthAddress () {
+      this.inputEthAddress = this.savedEthAddress
+      this.changingEthAddress = true
+    },
     async saveEtherAddress () {
       const identity = this.identityManager.currentIdentity
       if (!identity) {
@@ -162,6 +176,7 @@ export default {
       }
       await this.tequilapiClient.updateIdentityPayout(identity.id, this.inputEthAddress)
       this.savedEthAddress = this.inputEthAddress
+      this.changingEthAddress = false
     }
   },
   computed: {
