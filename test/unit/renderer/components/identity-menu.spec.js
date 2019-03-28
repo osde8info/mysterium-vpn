@@ -94,7 +94,7 @@ describe('IdentityMenu', () => {
 
     it('renders client ID', () => {
       expect(wrapper.findAll('.flex-line__item')).to.have.lengthOf(5, 'has 5 elements')
-      expect(wrapper.findAll('.identity-menu__text')).to.have.lengthOf(1, 'has ID text')
+      expect(wrapper.findAll('.identity-menu__text')).to.have.lengthOf(2, 'has ID text')
       expect(wrapper.findAll('.copy-button')).to.have.lengthOf(1, 'has Copy Button')
     })
   })
