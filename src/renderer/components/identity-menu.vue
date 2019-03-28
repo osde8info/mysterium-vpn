@@ -16,43 +16,69 @@
   -->
 
 <template>
-  <div id="identity-registration">
+  <div
+    class="app__nav nav nav--right"
+    :class="{'is-open': isIdentityMenuOpen}">
     <div
-      class="app__nav nav"
-      id="registration-instructions"
+      class="nav__content nav__content--right"
       :class="{'is-open': isIdentityMenuOpen}">
-      <div
-        class="nav__content"
-        :class="{'is-open': isIdentityMenuOpen}">
 
-        <div class="nav__navicon">
-          <close-button :click="hideInstructions"/>
-        </div>
+      <div class="nav__navicon">
+        <close-button :click="hideInstructions"/>
+      </div>
 
-        <nav-list class="identity-registration-content">
-          <h1 slot="item">Mysterium ID</h1>
+      <nav-list>
+        <div
+          class="identity-menu"
+          slot="item">
+          <h1>Mysterium ID</h1>
 
           <div
-            slot="item"
-            v-if="consumerId"
-            class="consumer-id-view">
-            <div class="consumer-id-view__item">
+            class="flex-line"
+            v-if="consumerId">
+            <div class="flex-line__item">
               <logo-icon :active="registrationFetched"/>
             </div>
-            <div class="consumer-id-view__item">
-              <span
-                class="consumer-id-view__id-text"
-                :class="{'consumer-id-view__id-text--registered': registrationFetched}">
-                {{ consumerId }}
-              </span>
+            <div
+              class="flex-line__item identity-menu__text"
+              :class="{'identity-menu__text--red': !registrationFetched}">
+              {{ consumerId }}
             </div>
-            <div class="consumer-id-view__item">
-              <copy-button :text="consumerId"/>
+            <copy-button
+              class="flex-line__item"
+              :text="consumerId"/>
+          </div>
+
+          <h2>Ether address</h2>
+
+          <div class="flex-line">
+            <div
+              class="flex-line__item">
+              <img
+                src="../../../static/icons/ethereum.png"
+                class="icon-ethereum">
+            </div>
+            <input
+              class="flex-line__item flex-line__item--autosize"
+              type="text"
+              v-if="savedEthAddress === null"
+              v-model="inputEthAddress"
+              placeholder="Enter Ether address to receive Bounty rewards">
+            <div
+              class="flex-line__item flex-line__item--autosize identity-menu__text"
+              v-if="savedEthAddress !== null">
+              {{ savedEthAddress }}
             </div>
           </div>
 
           <div
-            slot="item"
+            v-if="savedEthAddress === null"
+            class="btn"
+            @click="saveEtherAddress()">
+            OK
+          </div>
+
+          <div
             v-if="paymentsAreEnabled && registrationFetched && !registration.registered">
             <p>
               In order to use Mysterium VPN you need to have registered ID in Mysterium Blockchain
@@ -75,15 +101,15 @@
               Register Your ID
             </div>
           </div>
-        </nav-list>
-      </div>
-      <transition name="fade">
-        <div
-          v-if="isIdentityMenuOpen"
-          class="nav__backdrop"
-          @click="hideInstructions"/>
-      </transition>
+        </div>
+      </nav-list>
     </div>
+    <transition name="fade">
+      <div
+        v-if="isIdentityMenuOpen"
+        class="nav__backdrop nav__backdrop--right"
+        @click="hideInstructions"/>
+    </transition>
   </div>
 </template>
 
@@ -99,12 +125,21 @@ import LogoIcon from './logo-icon'
 
 export default {
   name: 'IdentityRegistration',
-  dependencies: ['rendererCommunication', 'getPaymentLink', 'featureToggle'],
+  dependencies: ['rendererCommunication', 'getPaymentLink', 'featureToggle', 'tequilapiClient', 'identityManager'],
   components: {
     CloseButton,
     CopyButton,
     LogoIcon,
     NavList
+  },
+  data () {
+    return {
+      inputEthAddress: '',
+      savedEthAddress: null
+    }
+  },
+  async created () {
+    this.savedEthAddress = await this.identityManager.fetchEthAddress()
   },
   methods: {
     hideInstructions () {
@@ -119,6 +154,14 @@ export default {
     },
     copyId () {
       clipboard.writeText(this.consumerId)
+    },
+    async saveEtherAddress () {
+      const identity = this.identityManager.currentIdentity
+      if (!identity) {
+        throw new Error('Current identity is missing, cannot update identity payout')
+      }
+      await this.tequilapiClient.updateIdentityPayout(identity.id, this.inputEthAddress)
+      this.savedEthAddress = this.inputEthAddress
     }
   },
   computed: {

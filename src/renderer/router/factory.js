@@ -23,7 +23,6 @@ import Vpn from '@/pages/vpn'
 import Provider from '@/pages/provider'
 import Terms from '@/pages/terms'
 import ConnectionHistory from '@/pages/connection-history'
-import About from '@/pages/about'
 import logger from '../../app/logger'
 
 function factory (store) {
@@ -77,11 +76,6 @@ function factory (store) {
         path: '/connection-history',
         name: 'connection-history',
         component: ConnectionHistory
-      },
-      {
-        path: '/about',
-        name: 'about',
-        component: About
       }
     ]
   })

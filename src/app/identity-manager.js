@@ -22,6 +22,7 @@ import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identi
 import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import messages from './messages'
 import Publisher from '../libraries/publisher'
+import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 
 const PASSWORD = ''
 
@@ -31,10 +32,10 @@ const PASSWORD = ''
 class IdentityManager {
   _tequilapi: TequilapiClient
 
-  _identity: ?IdentityDTO = null
+  _currentIdentity: ?IdentityDTO = null
   _registration: ?IdentityRegistrationDTO
 
-  _identityPublisher: Publisher<IdentityDTO> = new Publisher()
+  _currentIdentityPublisher: Publisher<IdentityDTO> = new Publisher()
   _registrationPublisher: Publisher<IdentityRegistrationDTO> = new Publisher()
   _errorMessagePublisher: Publisher<string> = new Publisher()
 
@@ -51,9 +52,12 @@ class IdentityManager {
     }
   }
 
-  // TODO: unify naming
+  get currentIdentity (): ?IdentityDTO {
+    return this._currentIdentity
+  }
+
   onCurrentIdentityChange (callback: IdentityDTO => void) {
-    this._identityPublisher.addSubscriber(callback)
+    this._currentIdentityPublisher.addSubscriber(callback)
   }
 
   setRegistration (registration: IdentityRegistrationDTO) {
@@ -92,13 +96,29 @@ class IdentityManager {
     this._setCurrentIdentity(identity)
   }
 
+  async fetchEthAddress (): Promise<?string> {
+    if (!this.currentIdentity) {
+      throw new Error('Cannot fetch eth address without current identity')
+    }
+
+    try {
+      const payout = await this._tequilapi.identityPayout(this.currentIdentity.id)
+      return payout.ethAddress
+    } catch (err) {
+      if (err.name === TequilapiError.name && err.isNotFoundError) {
+        return null
+      }
+      throw err
+    }
+  }
+
   onErrorMessage (callback: string => void) {
     this._errorMessagePublisher.addSubscriber(callback)
   }
 
   _setCurrentIdentity (identity: IdentityDTO) {
-    this._identity = identity
-    this._identityPublisher.publish(identity)
+    this._currentIdentity = identity
+    this._currentIdentityPublisher.publish(identity)
   }
 
   // TODO: this class should not show errors in case VpnInitializer is run with multiple retries

@@ -18,7 +18,7 @@
 // @flow
 import { beforeEach, describe, expect, it } from '../../../helpers/dependencies'
 import DIContainer from '../../../../src/app/di/vue-container'
-import IdentityRegistration from '@/components/identity-registration'
+import IdentityMenu from '@/components/identity-menu'
 import { createLocalVue, mount } from '@vue/test-utils'
 import DirectMessageBus from '../../../helpers/direct-message-bus'
 import { buildRendererCommunication } from '../../../../src/app/communication/renderer-communication'
@@ -31,10 +31,11 @@ import types from '../../../../src/renderer/store/types'
 import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
 import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
+import IdentityManager from '../../../../src/app/identity-manager'
 
-describe('IdentityRegistration', () => {
+describe('IdentityMenu', () => {
   let rendererCommunication: RendererCommunication
-  let wrapper: IdentityRegistration
+  let wrapper: IdentityMenu
   let store: Vuex.Store
 
   function mountEverything (currentIdentity: ?IdentityDTO) {
@@ -46,11 +47,13 @@ describe('IdentityRegistration', () => {
     const messageBus = new DirectMessageBus()
     rendererCommunication = buildRendererCommunication(messageBus)
 
+    const tequilapi = new EmptyTequilapiClientMock()
     dependencies.constant('rendererCommunication', rendererCommunication)
     dependencies.constant('getPaymentLink', () => {})
     dependencies.constant('featureToggle', new FeatureToggle({ payments: true }))
+    dependencies.constant('tequilapiClient', tequilapi)
+    dependencies.constant('identityManager', new IdentityManager(tequilapi))
 
-    const tequilapi = new EmptyTequilapiClientMock()
     const identity = {
       ...identityStoreFactory(),
       state: { current: currentIdentity }
@@ -62,7 +65,7 @@ describe('IdentityRegistration', () => {
       }
     })
 
-    wrapper = mount(IdentityRegistration, {
+    wrapper = mount(IdentityMenu, {
       localVue: vm,
       store
     })
@@ -74,7 +77,7 @@ describe('IdentityRegistration', () => {
     })
 
     it('should still render component', () => {
-      expect(wrapper.findAll('#identity-registration')).to.have.lengthOf(1)
+      expect(wrapper.findAll('.identity-menu')).to.have.lengthOf(1)
     })
   })
 
@@ -83,15 +86,15 @@ describe('IdentityRegistration', () => {
       mountEverything({ id: '0x1' })
     })
 
-    it('renders instructions when menu is opened', () => {
-      expect(wrapper.findAll('#registration-instructions.is-open')).to.have.lengthOf(0)
+    it('renders menu when it is opened', () => {
+      expect(wrapper.classes()).not.to.contain('is-open')
       store.commit(types.SHOW_IDENTITY_MENU)
-      expect(wrapper.findAll('#registration-instructions.is-open')).to.have.lengthOf(1)
+      expect(wrapper.classes()).to.contain('is-open')
     })
 
     it('renders client ID', () => {
-      expect(wrapper.findAll('.consumer-id-view__item')).to.have.lengthOf(3, 'has 3 elements')
-      expect(wrapper.findAll('.consumer-id-view__id-text')).to.have.lengthOf(1, 'has ID text')
+      expect(wrapper.findAll('.flex-line__item')).to.have.lengthOf(5, 'has 5 elements')
+      expect(wrapper.findAll('.identity-menu__text')).to.have.lengthOf(1, 'has ID text')
       expect(wrapper.findAll('.copy-button')).to.have.lengthOf(1, 'has Copy Button')
     })
   })

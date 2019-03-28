@@ -33,6 +33,7 @@ import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
 import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
 import { ServiceStatus } from 'mysterium-tequilapi/lib/dto/service-status'
 import { parseProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
+import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
 
 class EmptyTequilapiClientMock implements TequilapiClient {
   async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
@@ -64,6 +65,10 @@ class EmptyTequilapiClientMock implements TequilapiClient {
 
   async identityRegistration (id: string): Promise<IdentityRegistrationDTO> {
     return { registered: true }
+  }
+
+  async identityPayout (id: string): Promise<IdentityPayoutDTO> {
+    return { ethAddress: 'mock eth address' }
   }
 
   async updateIdentityPayout (id: string, ethAddress: string): Promise<void> {

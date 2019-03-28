@@ -28,7 +28,7 @@
 
 <script>
 import IdentityButton from '../components/identity-button'
-import IdentityRegistration from '../components/identity-registration'
+import IdentityRegistration from './identity-menu'
 import types from '../store/types'
 
 export default {
