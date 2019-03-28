@@ -32,8 +32,8 @@ const TrayIcon = {
 type IconState = $Values<typeof TrayIcon>
 
 const iconFilenames = {
-  [TrayIcon.active]: 'trayActiveTemplate.png',
-  [TrayIcon.passive]: 'trayPassiveTemplate.png'
+  [TrayIcon.active]: 'active.png',
+  [TrayIcon.passive]: 'passive.png'
 }
 
 type electronTrayFactory = (iconPath: string) => ElectronTray

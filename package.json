@@ -42,10 +42,10 @@
     ],
     "extraResources": [
       "./static/icons/logo.svg",
-      "./static/icons/trayActiveTemplate.png",
-      "./static/icons/trayActiveTemplate@2x.png",
-      "./static/icons/trayPassiveTemplate.png",
-      "./static/icons/trayPassiveTemplate@2x.png",
+      "./static/icons/tray/active.png",
+      "./static/icons/tray/active@2x.png",
+      "./static/icons/tray/passive.png",
+      "./static/icons/tray/passive@2x.png",
       "./static/terms/terms.html"
     ],
     "extraFiles": [
