@@ -26,7 +26,6 @@ import type { ConnectionStatisticsDTO } from 'mysterium-tequilapi/lib/dto/connec
 import type { ConsumerLocationDTO } from 'mysterium-tequilapi/lib/dto/consumer-location'
 import type { BugReporter } from '../../../app/bug-reporting/interface'
 import logger from '../../../app/logger'
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 import type { ConnectionEstablisher } from '../../../app/connection/connection-establisher'
 import type { ErrorMessage } from '../../../app/connection/error-message'
 import { ConnectionStatsFetcher } from '../../../app/connection/connection-stats-fetcher'
@@ -132,7 +131,7 @@ function actionsFactory (
         const locationDto = await tequilapi.location(config.locationUpdateTimeout)
         commit(type.LOCATION, locationDto)
       } catch (err) {
-        if (err.name === TequilapiError.name) {
+        if (err.isTequilapiError) {
           return
         }
         bugReporter.captureErrorException(err)
@@ -143,7 +142,7 @@ function actionsFactory (
         const ipModel = await tequilapi.connectionIP(config.ipUpdateTimeout)
         commit(type.CONNECTION_IP, ipModel.ip)
       } catch (err) {
-        if (err.name === TequilapiError.name) {
+        if (err.isTequilapiError) {
           return
         }
         bugReporter.captureErrorException(err)

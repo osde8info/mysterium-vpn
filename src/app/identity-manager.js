@@ -22,7 +22,6 @@ import type { IdentityRegistrationDTO } from 'mysterium-tequilapi/lib/dto/identi
 import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import messages from './messages'
 import Publisher from '../libraries/publisher'
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 
 const PASSWORD = ''
 
@@ -105,7 +104,7 @@ class IdentityManager {
       const payout = await this._tequilapi.identityPayout(this.currentIdentity.id)
       return payout.ethAddress
     } catch (err) {
-      if (err.name === TequilapiError.name && err.isNotFoundError) {
+      if (err.isNotFoundError) {
         return null
       }
       throw err

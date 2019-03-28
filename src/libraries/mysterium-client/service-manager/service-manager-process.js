@@ -26,7 +26,6 @@ import { HEALTH_CHECK_INTERVAL } from '../monitoring/monitoring'
 import ServiceManager, { SERVICE_STATE } from './service-manager'
 import type { ServiceState } from './service-manager'
 import { waitForStatusUp } from '../monitoring/utils'
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 
 /***
  * Time in milliseconds required to fully activate Mysterium client after restart
@@ -83,7 +82,7 @@ class ServiceManagerProcess implements Process {
     try {
       await this._tequilapi.connectionCancel()
     } catch (err) {
-      if (err.name !== TequilapiError.name) {
+      if (!err.isTequilapiError) {
         throw err
       }
     }
