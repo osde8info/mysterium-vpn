@@ -59,11 +59,15 @@
             </div>
           </transition>
           <div class="stats__block">
-            <div class="stats__unit">
+            <div class="stats__provider">
+              <p class="active-connections">
+                <span class="connection-count">{{ sessionCount }}</span> active connections
+              </p>
               <a
+                class="dashboard-link"
                 @click="openStatsPage()"
                 title="Open dashboard of current service"
-              >STATISTICS</a>
+              >View dashboard</a>
             </div>
           </div>
         </div>
@@ -94,10 +98,10 @@ export default {
     AppError
   },
   dependencies: [
-    'tequilapiClient',
     'bugReporter',
-    'providerService',
     'providerConfig',
+    'providerService',
+    'providerSessions',
     'rendererCommunication'
   ],
   data () {
@@ -106,15 +110,16 @@ export default {
       pendingStartRequest: false,
       pendingStopRequest: false,
       showTabModal: false,
-      users: 0
+      sessionCount: 0
     }
   },
   async mounted () {
-    this.statusSubscriber = newStatus => this.onStatusChange(newStatus)
-    this.providerService.addStatusSubscriber(this.statusSubscriber)
+    this.providerService.addStatusSubscriber(this.onStatusChange)
     this.providerService.checkForExistingService().catch(err => {
       logger.error('Check for existing service failed', err)
     })
+
+    this.providerSessions.addCountSubscriber(this.onSessionCountChange)
 
     // reset any error messages from VPN page
     this.$store.commit(type.HIDE_ERROR)
@@ -124,8 +129,8 @@ export default {
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.FETCH_CONNECTION_STATUS)
   },
   beforeDestroy () {
-    this.providerService.removeStatusSubscriber(this.statusSubscriber)
-    clearInterval(this.clearInterval)
+    this.providerService.removeStatusSubscriber(this.onStatusChange)
+    this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
   computed: {
     ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
@@ -220,6 +225,7 @@ export default {
 
       try {
         await this.providerService.stop()
+        this.resetSessions()
       } catch (e) {
         this.$store.commit(type.SHOW_ERROR_MESSAGE, 'Failed to stop the service: ' + e.message)
         logger.warn(e)
@@ -233,6 +239,14 @@ export default {
       this.rendererCommunication.providerServiceStatusChanged.send(newStatus)
       // TODO: show error if status changes from "Starting" to "NotRunning"
       // TODO: show error if service ends unexpectedly, without stoping service
+    },
+
+    onSessionCountChange (count) {
+      this.sessionCount = count
+    },
+
+    resetSessions () {
+      this.sessionCount = 0
     },
 
     async stopAndGoToVpn () {
@@ -249,6 +263,7 @@ export default {
 
       this.goToVpn()
     },
+
     async onTabClick (page) {
       if (page !== 'vpn') {
         return
@@ -261,6 +276,7 @@ export default {
 
       this.goToVpn()
     },
+
     goToVpn () {
       this.$router.push('/vpn')
     },
