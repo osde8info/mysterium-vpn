@@ -59,11 +59,15 @@
             </div>
           </transition>
           <div class="stats__block">
-            <div class="stats__unit">
+            <div class="stats__provider">
+              <p class="active-connections">
+                <span class="connection-count">{{ sessionCount }}</span> active connections
+              </p>
               <a
+                class="dashboard-link"
                 @click="openStatsPage()"
                 title="Open dashboard of current service"
-              >STATISTICS</a>
+              >View dashboard</a>
             </div>
           </div>
         </div>
@@ -106,7 +110,7 @@ export default {
       pendingStartRequest: false,
       pendingStopRequest: false,
       showTabModal: false,
-      users: 0
+      sessionCount: 0
     }
   },
   async mounted () {
