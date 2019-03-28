@@ -142,13 +142,13 @@ export default {
     return {
       inputEthAddress: '',
       savedEthAddress: null,
-      changingEthAddress: false
+      changingEthAddress: true
     }
   },
   async created () {
     this.savedEthAddress = await this.identityManager.fetchEthAddress()
-    if (!this.savedEthAddress) {
-      this.changingEthAddress = true
+    if (this.savedEthAddress) {
+      this.changingEthAddress = false
     }
   },
   methods: {
