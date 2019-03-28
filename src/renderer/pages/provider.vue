@@ -98,10 +98,10 @@ export default {
     AppError
   },
   dependencies: [
-    'tequilapiClient',
     'bugReporter',
-    'providerService',
     'providerConfig',
+    'providerService',
+    'providerSessions',
     'rendererCommunication'
   ],
   data () {
@@ -119,6 +119,8 @@ export default {
     this.providerService.checkForExistingService().catch(err => {
       logger.error('Check for existing service failed', err)
     })
+
+    this.providerSessions.onCount(this.onSessionCountChange)
 
     // reset any error messages from VPN page
     this.$store.commit(type.HIDE_ERROR)
@@ -239,6 +241,10 @@ export default {
       // TODO: show error if service ends unexpectedly, without stoping service
     },
 
+    onSessionCountChange (count) {
+      this.sessionCount = count
+    },
+
     async stopAndGoToVpn () {
       try {
         await this.providerService.stop()
@@ -253,6 +259,7 @@ export default {
 
       this.goToVpn()
     },
+
     async onTabClick (page) {
       if (page !== 'vpn') {
         return
@@ -265,6 +272,7 @@ export default {
 
       this.goToVpn()
     },
+
     goToVpn () {
       this.$router.push('/vpn')
     },
