@@ -114,13 +114,12 @@ export default {
     }
   },
   async mounted () {
-    this.statusSubscriber = newStatus => this.onStatusChange(newStatus)
-    this.providerService.addStatusSubscriber(this.statusSubscriber)
+    this.providerService.addStatusSubscriber(this.onStatusChange)
     this.providerService.checkForExistingService().catch(err => {
       logger.error('Check for existing service failed', err)
     })
 
-    this.providerSessions.onCount(this.onSessionCountChange)
+    this.providerSessions.addCountSubscriber(this.onSessionCountChange)
 
     // reset any error messages from VPN page
     this.$store.commit(type.HIDE_ERROR)
@@ -130,8 +129,8 @@ export default {
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.FETCH_CONNECTION_STATUS)
   },
   beforeDestroy () {
-    this.providerService.removeStatusSubscriber(this.statusSubscriber)
-    clearInterval(this.clearInterval)
+    this.providerService.removeStatusSubscriber(this.onStatusChange)
+    this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
   computed: {
     ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
