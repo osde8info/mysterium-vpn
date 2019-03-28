@@ -225,6 +225,7 @@ export default {
 
       try {
         await this.providerService.stop()
+        this.resetSessions()
       } catch (e) {
         this.$store.commit(type.SHOW_ERROR_MESSAGE, 'Failed to stop the service: ' + e.message)
         logger.warn(e)
@@ -242,6 +243,10 @@ export default {
 
     onSessionCountChange (count) {
       this.sessionCount = count
+    },
+
+    resetSessions () {
+      this.sessionCount = 0
     },
 
     async stopAndGoToVpn () {
