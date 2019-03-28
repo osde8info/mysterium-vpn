@@ -32,6 +32,7 @@ import MockEventSender from '../../../helpers/statistics/mock-event-sender'
 import FeatureToggle from '../../../../src/app/features/feature-toggle'
 import type { IdentityDTO } from 'mysterium-tequilapi/lib/dto/identity'
 import IdentityManager from '../../../../src/app/identity-manager'
+import BugReporterMock from '../../../helpers/bug-reporter-mock'
 
 describe('IdentityMenu', () => {
   let rendererCommunication: RendererCommunication
@@ -53,6 +54,7 @@ describe('IdentityMenu', () => {
     dependencies.constant('featureToggle', new FeatureToggle({ payments: true }))
     dependencies.constant('tequilapiClient', tequilapi)
     dependencies.constant('identityManager', new IdentityManager(tequilapi))
+    dependencies.constant('bugReporter', new BugReporterMock())
 
     const identity = {
       ...identityStoreFactory(),
@@ -94,7 +96,7 @@ describe('IdentityMenu', () => {
 
     it('renders client ID', () => {
       expect(wrapper.findAll('.flex-line__item')).to.have.lengthOf(5, 'has 5 elements')
-      expect(wrapper.findAll('.identity-menu__text')).to.have.lengthOf(2, 'has ID text')
+      expect(wrapper.findAll('.identity-menu__text')).to.have.lengthOf(1, 'has ID text')
       expect(wrapper.findAll('.copy-button')).to.have.lengthOf(1, 'has Copy Button')
     })
   })

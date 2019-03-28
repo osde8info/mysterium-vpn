@@ -131,7 +131,14 @@ import LogoIcon from './logo-icon'
 
 export default {
   name: 'IdentityRegistration',
-  dependencies: ['rendererCommunication', 'getPaymentLink', 'featureToggle', 'tequilapiClient', 'identityManager'],
+  dependencies: [
+    'rendererCommunication',
+    'getPaymentLink',
+    'featureToggle',
+    'tequilapiClient',
+    'identityManager',
+    'bugReporter'
+  ],
   components: {
     CloseButton,
     CopyButton,
@@ -142,13 +149,19 @@ export default {
     return {
       inputEthAddress: '',
       savedEthAddress: null,
-      changingEthAddress: false
+      changingEthAddress: true
     }
   },
   async created () {
-    this.savedEthAddress = await this.identityManager.fetchEthAddress()
-    if (!this.savedEthAddress) {
-      this.changingEthAddress = true
+    try {
+      this.savedEthAddress = await this.identityManager.fetchEthAddress()
+    } catch (err) {
+      if (!err.isTequilapiError) {
+        this.bugReporter.captureErrorException(err)
+      }
+    }
+    if (this.savedEthAddress) {
+      this.changingEthAddress = false
     }
   },
   methods: {

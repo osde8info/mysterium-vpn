@@ -23,7 +23,6 @@ import type { TequilapiClient } from 'mysterium-tequilapi/lib/client'
 import type { ConnectDetails } from '../statistics/events-connection'
 import { ConnectEventTracker, currentUserTime } from '../statistics/events-connection'
 import { ConnectionStatus } from 'mysterium-tequilapi/lib/dto/connection-status'
-import TequilapiError from 'mysterium-tequilapi/lib/tequilapi-error'
 import messages from '../messages'
 import logger from '../logger'
 import type { ConnectionEstablisher } from './connection-establisher'
@@ -78,7 +77,7 @@ class TequilapiConnectionEstablisher implements ConnectionEstablisher {
       eventTracker.connectEnded()
       errorMessage.hide()
     } catch (err) {
-      if (err.name === TequilapiError.name && err.isRequestClosedError) {
+      if (err.isRequestClosedError) {
         eventTracker.connectCanceled()
         return
       }
@@ -110,7 +109,7 @@ class TequilapiConnectionEstablisher implements ConnectionEstablisher {
       } catch (err) {
         errorMessage.show(messages.disconnectFailed)
         logger.info('Connection cancelling failed:', err)
-        if (err.name !== TequilapiError.name) {
+        if (!err.isTequilapiError) {
           this._bugReporter.captureInfoException(err)
         }
       }
