@@ -20,6 +20,7 @@
 import { app, BrowserWindow } from 'electron'
 import type { MysteriumVpnParams } from './mysterium-vpn-params'
 import trayFactory from '../main/tray/factory'
+import createMenu from '../main/menu'
 import translations from './messages'
 import { onFirstEvent } from './events'
 import path from 'path'
@@ -117,6 +118,8 @@ class MysteriumVpn {
         logException('Application launch failed', e)
         this._bugReporter.captureErrorException(e)
       }
+
+      createMenu()
     })
     // fired when all windows are closed
     app.on('window-all-closed', () => this.onWindowsClosed())
