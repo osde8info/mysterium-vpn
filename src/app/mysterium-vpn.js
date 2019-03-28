@@ -385,7 +385,7 @@ class MysteriumVpn {
       this._communication,
       this._countryList,
       this._window,
-      path.join(this._config.staticDirectory, 'icons')
+      path.join(this._config.staticDirectory, 'icons/tray')
     )
   }
 }

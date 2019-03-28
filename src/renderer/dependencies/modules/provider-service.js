@@ -19,6 +19,7 @@
 
 import type { Container } from '../../../app/di'
 import { ProviderService } from 'mysterium-vpn-js/lib/domain/provider-service'
+import { ProviderSessions } from 'mysterium-vpn-js/lib/domain/provider-sessions'
 
 export default function bootstrap (container: Container) {
   container.constant('providerConfig', {
@@ -27,5 +28,8 @@ export default function bootstrap (container: Container) {
   })
   container.service('providerService', ['tequilapiClient'], (tequilapiClient) => {
     return new ProviderService(tequilapiClient)
+  })
+  container.service('providerSessions', ['tequilapiClient'], (tequilapiClient) => {
+    return new ProviderSessions(tequilapiClient)
   })
 }
