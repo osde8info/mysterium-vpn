@@ -85,8 +85,10 @@ describe('tray', () => {
     describe('.build', () => {
       it('renders menu items without disconnect when not connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.NOT_CONNECTED).build()
+        expect(items[0].label).to.equal(translations.vpnStatusDisconnected)
+        expect(items[1].label).to.equal(translations.connect)
         expect(items[2].type).to.equal(separator)
-        expect(items[3].label).to.equal(translations.connect)
+        expect(items[3].label).to.equal(translations.providerServiceStopped)
         expect(items[4].type).to.equal(separator)
         expect(items[5].label).to.equal(translations.showWindow)
         expect(items[6].label).to.equal(translations.toggleDeveloperTools)
@@ -96,8 +98,10 @@ describe('tray', () => {
 
       it('renders menu items with disconnect when connected', () => {
         const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
+        expect(items[0].label).to.equal(translations.vpnStatusConnected)
+        expect(items[1].label).to.equal(translations.disconnect)
         expect(items[2].type).to.equal(separator)
-        expect(items[3].label).to.equal(translations.disconnect)
+        expect(items[3].label).to.equal(translations.providerServiceStopped)
         expect(items[4].type).to.equal(separator)
         expect(items[5].label).to.equal(translations.showWindow)
         expect(items[6].label).to.equal(translations.toggleDeveloperTools)
@@ -144,9 +148,9 @@ describe('tray', () => {
           }
         ])
 
-        const items = builder.build()
-        expect(items[3].submenu[0].label).to.include('*')
-        expect(items[3].submenu[1].label).to.not.include('*')
+        const connectItem: any = builder.build().find(it => it.label === 'Connect')
+        expect(connectItem.submenu[0].label).to.include('*')
+        expect(connectItem.submenu[1].label).to.not.include('*')
       })
 
       it('connects', () => {
@@ -167,20 +171,21 @@ describe('tray', () => {
           }
         ])
 
-        const items = builder.build()
+        const connectItem: any = builder.build().find(it => it.label === 'Connect')
 
         const recorder = new MessageRecorder(rendererCommunication.connectionRequest)
         expect(recorder.invoked).to.be.false
-        items[3].submenu[0].click()
+        connectItem.submenu[0].click()
         expect(recorder.invoked).to.be.true
         expect(recorder.argument).to.eql({ providerId: 'proposalId_123', providerCountry: 'LT' })
       })
 
       it('disconnects', () => {
-        const items = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
+        const disconnectItem: any = builder.updateConnectionStatus(ConnectionStatus.CONNECTED).build()
+          .find(it => it.label === 'Disconnect')
         const recorder = new MessageRecorder(rendererCommunication.connectionCancel)
         expect(recorder.invoked).to.be.false
-        items[3].click()
+        disconnectItem.click()
         expect(recorder.invoked).to.be.true
       })
 

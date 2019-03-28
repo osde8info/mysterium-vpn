@@ -68,12 +68,14 @@ function getMenuItems (
   const items = new TrayMenu()
   const vpnStatusItem = (new TrayMenuItem(translations.vpnStatusDisconnected)).disable()
   items.addItem(vpnStatusItem)
-  const providerServiceStatusItem = new TrayMenuItem(translations.providerServiceStopped).disable()
-  items.addItem(providerServiceStatusItem)
-  items.addItem(new TrayMenuSeparator())
   items.addItem(connect)
   items.addItem(disconnect.hide())
   items.addItem(new TrayMenuSeparator())
+
+  const providerServiceStatusItem = new TrayMenuItem(translations.providerServiceStopped).disable()
+  items.addItem(providerServiceStatusItem)
+  items.addItem(new TrayMenuSeparator())
+
   items.add(translations.showWindow, () => showWindow())
   items.add(translations.toggleDeveloperTools, () => toggleDevTools(), 'Alt+Command+I')
   items.addItem(new TrayMenuSeparator())
