@@ -35,6 +35,35 @@
         <h1>{{ statusText }}</h1>
       </div>
 
+      <div class="control__body traffic-switch">
+        <div class="options">
+          <div class="option">
+            <input
+              id="all-traffic"
+              type="radio"
+              v-model="whitelist"
+              :value="0">
+            <label for="all-traffic">All traffic</label>
+          </div>
+          <div class="option">
+            <input
+              id="safe-traffic"
+              type="radio"
+              v-model="whitelist"
+              :value="1">
+            <label for="safe-traffic">Mysterium verified partner traffic</label>
+          </div>
+        </div>
+        <div
+          class="explanation"
+          :class="{'visible': whitelist}">
+          <p>
+            Safe option: traffic vetted via business contracts, unavailable to the general public and limited to
+            streaming.
+          </p>
+        </div>
+      </div>
+
       <div class="control__bottom">
         <div
           class="control__action btn"
@@ -110,7 +139,8 @@ export default {
       pendingStartRequest: false,
       pendingStopRequest: false,
       showTabModal: false,
-      sessionCount: 0
+      sessionCount: 0,
+      whitelist: 1
     }
   },
   async mounted () {
