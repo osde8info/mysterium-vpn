@@ -63,8 +63,7 @@ class ActionLooperConfig {
   }
 }
 
-const defaultStatistics = {
-}
+const defaultStatistics = {}
 
 function stateFactory (): ConnectionStore {
   return {
@@ -89,6 +88,9 @@ const getters = {
   },
   ip (state: ConnectionStore): ?string {
     return state.ip
+  },
+  location (state: ConnectionStore): ?ConsumerLocationDTO {
+    return state.location
   }
 }
 

@@ -81,7 +81,8 @@ describe('TequilapiConnectionEstablisher', () => {
   let mockErrorMessage: MockErrorMessage
 
   const location: ConsumerLocationDTO = {
-    originalCountry: 'lt'
+    country: 'lt',
+    asn: '123'
   }
   const actionLooper: ?FunctionLooper = null
 

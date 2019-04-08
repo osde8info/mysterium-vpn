@@ -107,7 +107,9 @@ class EmptyTequilapiClientMock implements TequilapiClient {
   }
 
   async location (): Promise<ConsumerLocationDTO> {
-    return {}
+    return {
+      asn: 'asd'
+    }
   }
 
   async serviceList (): Promise<ServiceInfoDTO[]> {

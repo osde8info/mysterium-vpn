@@ -33,6 +33,12 @@
 
       <div class="control__top">
         <h1>{{ statusText }}</h1>
+        <div class="ip-category">
+          <p class="ip-status">
+            IP: <span class="text-blurry">{{ ip }}</span>
+            (<span v-text="ipType"/>)
+          </p>
+        </div>
       </div>
 
       <div class="control__body traffic-switch">
@@ -146,7 +152,8 @@ export default {
       accessPolicyDefaults: {
         title: 'Whitelisted traffic',
         description: 'When you choose to run this traffic you can rest assured that it’s not coming from the dark web.'
-      }
+      },
+      residential: false
     }
   },
   async mounted () {
@@ -171,7 +178,17 @@ export default {
     this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
   computed: {
-    ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
+    ...mapGetters(['ip', 'location', 'errorMessage', 'showError', 'currentIdentity']),
+    ipType () {
+      switch (this.location.node_type) {
+        case 'residential':
+          return 'Residential'
+        case 'cellular':
+          return 'Cellular'
+        default:
+          return 'Data center'
+      }
+    },
     pendingRequests () {
       return this.pendingStartRequest || this.pendingStopRequest
     },

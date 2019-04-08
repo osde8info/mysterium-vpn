@@ -531,8 +531,7 @@ describe('connection', () => {
     describe('RECONNECT', () => {
       it('invokes connection establisher with last connection provider', async () => {
         const location: ConsumerLocationDTO = {
-          original: { ip: '', country: '' },
-          current: { ip: '', country: '' }
+          asn: '123'
         }
         const state: ConnectionStore = {
           status: ConnectionStatus.CONNECTED,
@@ -569,7 +568,9 @@ describe('connection', () => {
           actionLoopers: {
             [type.FETCH_CONNECTION_STATUS]: new FunctionLooper(async () => {}, 1000)
           },
-          location: { originalCountry: '' }
+          location: {
+            asn: '123'
+          }
         }
         const getters = {
           currentIdentity: 'current',
@@ -588,8 +589,7 @@ describe('connection', () => {
     describe('CONNECT', () => {
       it('invokes connection establisher with given provider', async () => {
         const location: ConsumerLocationDTO = {
-          original: { ip: '', country: '' },
-          current: { ip: '', country: '' }
+          asn: '123'
         }
         const state = {
           status: ConnectionStatus.CONNECTED,

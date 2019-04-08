@@ -123,10 +123,10 @@ class TequilapiConnectionEstablisher implements ConnectionEstablisher {
   }
 
   _getOriginalCountry (location: ?ConsumerLocationDTO): ?string {
-    if (location == null || location.originalCountry == null) {
+    if (location == null || location.country == null) {
       return null
     }
-    return location.originalCountry
+    return location.country
   }
 }
 
