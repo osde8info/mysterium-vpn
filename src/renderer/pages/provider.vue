@@ -33,6 +33,41 @@
 
       <div class="control__top">
         <h1>{{ statusText }}</h1>
+        <div class="ip-category">
+          <p class="ip-status">
+            IP: <span class="text-blurry">{{ ip }}</span>
+            (<span v-text="residential ? 'Residential' : 'Data center'"/>)
+          </p>
+        </div>
+      </div>
+
+      <div class="control__body traffic-switch">
+        <div class="options">
+          <div class="option">
+            <input
+              id="all-traffic"
+              type="radio"
+              v-model="whitelist"
+              :value="0">
+            <label for="all-traffic">All traffic</label>
+          </div>
+          <div class="option">
+            <input
+              id="safe-traffic"
+              type="radio"
+              v-model="whitelist"
+              :value="1">
+            <label for="safe-traffic">Mysterium verified partner traffic</label>
+          </div>
+        </div>
+        <div
+          class="explanation"
+          :class="{'visible': whitelist}">
+          <p>
+            Safe option: traffic vetted via business contracts, unavailable to the general public and limited to
+            streaming.
+          </p>
+        </div>
       </div>
 
       <div class="control__bottom">
@@ -110,7 +145,8 @@ export default {
       pendingStartRequest: false,
       pendingStopRequest: false,
       showTabModal: false,
-      sessionCount: 0
+      sessionCount: 0,
+      residential: false
     }
   },
   async mounted () {
@@ -133,7 +169,7 @@ export default {
     this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
   computed: {
-    ...mapGetters(['errorMessage', 'showError', 'currentIdentity']),
+    ...mapGetters(['ip', 'errorMessage', 'showError', 'currentIdentity']),
     pendingRequests () {
       return this.pendingStartRequest || this.pendingStopRequest
     },
