@@ -36,36 +36,7 @@
         <div class="ip-category">
           <p class="ip-status">
             IP: <span class="text-blurry">{{ ip }}</span>
-            (<span v-text="residential ? 'Residential' : 'Data center'"/>)
-          </p>
-        </div>
-      </div>
-
-      <div class="control__body traffic-switch">
-        <div class="options">
-          <div class="option">
-            <input
-              id="all-traffic"
-              type="radio"
-              v-model="whitelist"
-              :value="0">
-            <label for="all-traffic">All traffic</label>
-          </div>
-          <div class="option">
-            <input
-              id="safe-traffic"
-              type="radio"
-              v-model="whitelist"
-              :value="1">
-            <label for="safe-traffic">Mysterium verified partner traffic</label>
-          </div>
-        </div>
-        <div
-          class="explanation"
-          :class="{'visible': whitelist}">
-          <p>
-            Safe option: traffic vetted via business contracts, unavailable to the general public and limited to
-            streaming.
+            (<span v-text="isResidentialIP ? 'Residential' : 'Data center'"/>)
           </p>
         </div>
       </div>
@@ -146,7 +117,7 @@ export default {
       pendingStopRequest: false,
       showTabModal: false,
       sessionCount: 0,
-      residential: false
+      isResidentialIP: false
     }
   },
   async mounted () {
