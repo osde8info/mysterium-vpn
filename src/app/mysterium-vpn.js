@@ -17,7 +17,7 @@
 
 // @flow
 
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 import type { MysteriumVpnParams } from './mysterium-vpn-params'
 import trayFactory from '../main/tray/factory'
 import createMenu from '../main/menu'
@@ -47,6 +47,7 @@ import ProcessManager from './mysterium-client/process-manager'
 import type { MainCommunication } from './communication/main-communication'
 import { reportUnknownProposalCountries } from './countries/reporting'
 import FeatureToggle from './features/feature-toggle'
+import downloadLogs from '../libraries/download-logs'
 
 const LOG_PREFIX = '[MysteriumVpn] '
 
@@ -199,6 +200,17 @@ class MysteriumVpn {
     // TODO: load in DI?
     await this._loadUserSettings()
     this._disconnectNotification.onReconnect(() => this._communication.reconnectRequest.send())
+    this._handleLogDownloadRequest()
+  }
+
+  _handleLogDownloadRequest () {
+    ipcMain.on('download-logs', async (event) => {
+      try {
+        await downloadLogs(this._window.browserWindow, this._config.userDataDirectory)
+      } catch (e) {
+        logger.error(e)
+      }
+    })
   }
 
   _getWindowSize (showTerms: boolean) {

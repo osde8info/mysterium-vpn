@@ -63,6 +63,14 @@
             <icon-issue class="nav__icon nav__icon--issue"/>
             <span class="nav__text">report issue</span>
           </a>
+          <a
+            slot="item"
+            class="nav__trigger"
+            href="#"
+            @click="downloadLogs">
+            <icon-copy class="nav__icon nav__icon--copy"/>
+            <span class="nav__text">download logs</span>
+          </a>
         </nav-list>
 
         <div class="nav__settings">
@@ -93,9 +101,10 @@
 </template>
 
 <script>
-import { remote, shell } from 'electron'
+import { remote, shell, ipcRenderer } from 'electron'
 import { mapGetters, mapActions } from 'vuex'
 import IconIssue from '@/assets/img/icon--issue.svg'
+import IconCopy from '@/assets/img/icon--copy.svg'
 import IconEye from '@/assets/img/icon--eye.svg'
 import IconHistory from '@/assets/img/icon--history.svg'
 import IconQuit from '@/assets/img/icon--quit.svg'
@@ -112,6 +121,7 @@ export default {
     IconHistory,
     IconIssue,
     IconQuit,
+    IconCopy,
     IconLightbulb,
     DisconnectNotificationSettings,
     NavList
@@ -136,6 +146,9 @@ export default {
     },
     reportIssue () {
       this.feedbackForm.show()
+    },
+    downloadLogs () {
+      ipcRenderer.send('download-logs')
     }
   }
 }
