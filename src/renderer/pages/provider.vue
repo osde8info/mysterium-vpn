@@ -140,7 +140,7 @@ export default {
       showTabModal: false,
       sessionCount: 0,
       accessPolicy: null,
-      accessPolicySelected: 0,
+      accessPolicySelected: true,
       accessPolicyInterval: null,
       accessPolicyDefaults: {
         title: 'Mysterium Verified Partner traffic',
