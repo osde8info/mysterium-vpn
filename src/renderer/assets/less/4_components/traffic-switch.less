@@ -16,23 +16,25 @@
  */
 
 .traffic-switch {
+  text-align: left;
+
   .options {
     padding: 0 2rem 1rem;
     margin-bottom: 2rem;
     .option {
-      float: left;
       margin-left: 1.5rem;
     }
   }
 
   .explanation {
     width: 33rem;
+    height: 4rem;
     clear: both;
     font-size: 12px;
-    opacity: 0;
     margin: 0 auto;
+    padding-left: 28px;
+    color: #2b2b2b;
     &.visible {
-      opacity: 1;
     }
   }
 
@@ -49,7 +51,7 @@
     cursor: pointer;
     line-height: 20px;
     display: inline-block;
-    color: #666;
+    color: #000;
   }
 
   [type="radio"]:checked + label:before,
@@ -77,6 +79,10 @@
     border-radius: 100%;
     -webkit-transition: all 0.2s ease;
     transition: all 0.2s ease;
+  }
+
+  [type="radio"]:disabled + label:after {
+    background: @grey;
   }
 
   [type="radio"]:not(:checked) + label:after {
