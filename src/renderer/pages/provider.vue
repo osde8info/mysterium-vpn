@@ -35,6 +35,34 @@
         <h1>{{ statusText }}</h1>
       </div>
 
+      <div class="control__body traffic-switch">
+        <div class="options">
+          <div
+            class="option"
+            :class="{'disabled': !accessPolicy}"
+          >
+            <input
+              id="safe-traffic"
+              type="radio"
+              :disabled="!accessPolicy"
+              v-model="accessPolicySelected"
+              :value="true">
+            <label for="safe-traffic">{{ accessPolicy ? accessPolicy.title : accessPolicyDefaults.title }}</label>
+            <div class="explanation">
+              {{ accessPolicy ? accessPolicy.description : accessPolicyDefaults.description }}
+            </div>
+          </div>
+          <div class="option">
+            <input
+              id="all-traffic"
+              type="radio"
+              v-model="accessPolicySelected"
+              :value="false">
+            <label for="all-traffic">All traffic</label>
+          </div>
+        </div>
+      </div>
+
       <div class="control__bottom">
         <div
           class="control__action btn"
@@ -110,7 +138,15 @@ export default {
       pendingStartRequest: false,
       pendingStopRequest: false,
       showTabModal: false,
-      sessionCount: 0
+      sessionCount: 0,
+      accessPolicy: null,
+      accessPolicySelected: true,
+      accessPolicyInterval: null,
+      accessPolicyDefaults: {
+        title: 'Mysterium Verified Partner traffic',
+        description: 'Safe option: traffic vetted via business contracts,' +
+          'unavailable to general public and limited to streaming.'
+      }
     }
   },
   async mounted () {
@@ -127,8 +163,11 @@ export default {
     // stop statistics fetching
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.CONNECTION_IP)
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.FETCH_CONNECTION_STATUS)
+
+    this.startAccessPolicyFetching()
   },
   beforeDestroy () {
+    this.stopAccessPolicyFetching()
     this.providerService.removeStatusSubscriber(this.onStatusChange)
     this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
@@ -209,7 +248,11 @@ export default {
 
       try {
         // TODO: before starting service, ensure that VPN service has finished stopping
-        await this.providerService.start(this.currentIdentity, this.providerConfig.serviceType)
+        await this.providerService.start(
+          this.currentIdentity,
+          this.providerConfig.serviceType,
+          this.accessPolicySelected && this.accessPolicy ? this.accessPolicy.id : null
+        )
 
         this.$store.commit(type.HIDE_ERROR)
       } catch (e) {
@@ -218,6 +261,7 @@ export default {
       }
 
       this.pendingStartRequest = false
+      this.stopAccessPolicyFetching()
     },
 
     async stopService () {
@@ -232,6 +276,7 @@ export default {
       }
 
       this.pendingStopRequest = false
+      this.startAccessPolicyFetching()
     },
 
     onStatusChange (newStatus) {
@@ -287,6 +332,23 @@ export default {
 
     getProviderStatsLink (providerId, serviceType) {
       return this.providerConfig.baseURL + '/node/' + providerId + '/' + serviceType
+    },
+
+    startAccessPolicyFetching () {
+      const fetch = async () => {
+        this.accessPolicy = await this.providerService.getFirstAccessPolicy()
+        // disable the option when we fail to fetch it
+        if (this.accessPolicySelected && !this.accessPolicy) {
+          this.accessPolicySelected = false
+        }
+      }
+
+      fetch()
+      this.accessPolicyInterval = setInterval(fetch, 1000)
+    },
+
+    stopAccessPolicyFetching () {
+      clearInterval(this.accessPolicyInterval)
     }
   }
 }

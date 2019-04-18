@@ -68,7 +68,7 @@ export default {
       }
 
       if (this.$route.name === 'provider') {
-        return ['is-disabled', 'not-connected']
+        return ['hidden']
       }
 
       if (this.loading) {
