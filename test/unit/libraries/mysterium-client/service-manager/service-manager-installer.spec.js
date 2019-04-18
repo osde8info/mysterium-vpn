@@ -43,6 +43,7 @@ const STRINGIFIED_CONFIG = JSON.stringify({
     '--data-dir=/tmp/data',
     '--runtime-dir=/tmp/runtime',
     '--openvpn.binary=/tmp/ovpnbin',
+    '--openvpn.port=1194',
     '--tequilapi.port=4050',
     'daemon'
   ],

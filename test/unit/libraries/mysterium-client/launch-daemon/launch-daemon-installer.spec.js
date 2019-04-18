@@ -58,6 +58,8 @@ const TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>\n' +
   '            <string>/runtime-dir</string>\n' +
   '            <string>--openvpn.binary</string>\n' +
   '            <string>open-vpn-bin</string>\n' +
+  '            <string>--openvpn.port</string>\n' +
+  '            <string>1194</string>\n' +
   '            <string>--tequilapi.port</string>\n' +
   '            <string>4050</string>\n' +
   '            <string>daemon</string>\n' +
