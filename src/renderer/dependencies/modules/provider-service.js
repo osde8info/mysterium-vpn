@@ -24,7 +24,10 @@ import { ProviderSessions } from 'mysterium-vpn-js/lib/domain/provider-sessions'
 export default function bootstrap (container: Container) {
   container.constant('providerConfig', {
     'baseURL': 'https://testnet.mysterium.network',
-    'serviceType': 'openvpn'
+    'serviceType': 'openvpn',
+    'options': {
+      'port': 1194
+    }
   })
   container.service('providerService', ['tequilapiClient'], (tequilapiClient) => {
     return new ProviderService(tequilapiClient)

@@ -64,8 +64,6 @@ class LaunchDaemonInstaller implements Installer {
             <string>${this._config.runtimeDir}</string>
             <string>--openvpn.binary</string>
             <string>${this._config.openVPNBin}</string>
-            <string>--openvpn.port</string>
-            <string>1194</string>
             <string>--tequilapi.port</string>
             <string>${this._config.tequilapiPort}</string>
             <string>daemon</string>

@@ -7895,21 +7895,21 @@ mysterium-client-bin@0.0.0-dev:
     follow-redirects "^1.5.2"
     targz "^1.0.1"
 
-mysterium-tequilapi@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/mysterium-tequilapi/-/mysterium-tequilapi-0.8.0.tgz#8b0f869a74d709836206412d0e67fd1744d202df"
-  integrity sha512-htDdpVYLnfdP9eBverIBfCEvlKz7j2h/ASeJjJztw6YTds2vKD0aZHWc+2u8ChCm7esKnneiPOfj5o3PbZ9Fqg==
+mysterium-tequilapi@^0.8.1:
+  version "0.8.1"
+  resolved "https://registry.yarnpkg.com/mysterium-tequilapi/-/mysterium-tequilapi-0.8.1.tgz#25fda8e780813ee88ab84eadac321e727e8d1494"
+  integrity sha512-Fag1QhtRBXKRmMHbWl1yYjFdD11CDr+PLVo3FNu+EBVQZgmxfLOVUMxOtSWKAYTz5tjQL9csNl1FHKRWTxdjmQ==
   dependencies:
     "@babel/runtime" "^7.1.5"
     axios "^0.18.0"
 
-mysterium-vpn-js@^0.0.13:
-  version "0.0.13"
-  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-0.0.13.tgz#dbfc7b121318322073c85e6f5b8ad9079ce672c6"
-  integrity sha512-QRwDw1JhmXsyvcyoc/w9i/bQjpbthA91FhtirrSVJOy3mbVNy0veFDYOwOg7c522YEPMi/W688OpHtcxSGG8xw==
+mysterium-vpn-js@^0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/mysterium-vpn-js/-/mysterium-vpn-js-0.0.14.tgz#c29e5d627deeaae9860733649ccb26c31fa0eba2"
+  integrity sha512-KLDS+0x4CE+Wgzs7Mgc6L4Pt3mzgxp1dLLOucjNZ3wrGQhXoCpsZnfn8/VGKwGxr4+Q732z2xKhAJv76V25eew==
   dependencies:
     filesize "^4.1.2"
-    mysterium-tequilapi "^0.8.0"
+    mysterium-tequilapi "^0.8.1"
 
 nan@^2.10.0, nan@^2.9.2:
   version "2.11.0"
