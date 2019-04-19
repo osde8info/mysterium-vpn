@@ -251,7 +251,8 @@ export default {
         await this.providerService.start(
           this.currentIdentity,
           this.providerConfig.serviceType,
-          this.accessPolicySelected && this.accessPolicy ? this.accessPolicy.id : null
+          this.accessPolicySelected && this.accessPolicy ? this.accessPolicy.id : null,
+          this.providerConfig.options
         )
 
         this.$store.commit(type.HIDE_ERROR)
