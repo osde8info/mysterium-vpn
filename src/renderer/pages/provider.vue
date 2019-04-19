@@ -143,9 +143,8 @@ export default {
       accessPolicySelected: true,
       accessPolicyInterval: null,
       accessPolicyDefaults: {
-        title: 'Mysterium Verified Partner traffic',
-        description: 'Safe option: traffic vetted via business contracts,' +
-          'unavailable to general public and limited to streaming.'
+        title: 'Whitelisted traffic',
+        description: 'When you choose to run this traffic you can rest assured that it’s not coming from the dark web.'
       }
     }
   },
