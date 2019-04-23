@@ -149,6 +149,7 @@ export default {
     }
   },
   async mounted () {
+    this.startAccessPolicyFetching()
     this.providerService.addStatusSubscriber(this.onStatusChange)
     this.providerService.checkForExistingService().catch(err => {
       logger.error('Check for existing service failed', err)
@@ -162,8 +163,6 @@ export default {
     // stop statistics fetching
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.CONNECTION_IP)
     this.$store.dispatch(type.STOP_ACTION_LOOPING, type.FETCH_CONNECTION_STATUS)
-
-    this.startAccessPolicyFetching()
   },
   beforeDestroy () {
     this.stopAccessPolicyFetching()
@@ -335,16 +334,32 @@ export default {
     },
 
     startAccessPolicyFetching () {
+      let failedFetchCount = 0
+      const allowedFails = 10000
+
       const fetch = async () => {
-        this.accessPolicy = await this.providerService.getFirstAccessPolicy()
-        // disable the option when we fail to fetch it
-        if (this.accessPolicySelected && !this.accessPolicy) {
+        const accessPolicy = await this.providerService.getFirstAccessPolicy()
+
+        if (accessPolicy) {
+          failedFetchCount = 0
+
+          this.accessPolicy = accessPolicy
+          this.accessPolicyDefaults.title = accessPolicy.title
+          this.accessPolicyDefaults.description = accessPolicy.description
+          return
+        }
+
+        failedFetchCount++
+
+        if (failedFetchCount > allowedFails) {
+          this.accessPolicy = null
           this.accessPolicySelected = false
         }
       }
 
       fetch()
-      this.accessPolicyInterval = setInterval(fetch, 1000)
+
+      this.accessPolicyInterval = setInterval(fetch, 3000)
     },
 
     stopAccessPolicyFetching () {
