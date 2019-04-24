@@ -44,7 +44,7 @@
             <input
               id="safe-traffic"
               type="radio"
-              :disabled="!accessPolicy"
+              :disabled="!accessPolicy || trafficRadioButtonDisabled"
               v-model="accessPolicySelected"
               :value="true">
             <label for="safe-traffic">{{ accessPolicy ? accessPolicy.title : accessPolicyDefaults.title }}</label>
@@ -56,6 +56,7 @@
             <input
               id="all-traffic"
               type="radio"
+              :disabled="trafficRadioButtonDisabled"
               v-model="accessPolicySelected"
               :value="false">
             <label for="all-traffic">All traffic</label>
@@ -176,6 +177,19 @@ export default {
     },
     isButtonActive () {
       return this.status !== ServiceStatus.NOT_RUNNING || this.pendingRequests
+    },
+    trafficRadioButtonDisabled () {
+      if (this.pendingRequests) {
+        return true
+      }
+
+      switch (this.status) {
+        case ServiceStatus.STARTING:
+        case ServiceStatus.RUNNING:
+          return true
+      }
+
+      return false
     },
     statusText () {
       const notRunning = 'Stopped'
