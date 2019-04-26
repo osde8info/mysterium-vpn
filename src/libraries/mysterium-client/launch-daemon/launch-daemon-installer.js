@@ -66,7 +66,6 @@ class LaunchDaemonInstaller implements Installer {
             <string>${this._config.openVPNBin}</string>
             <string>--tequilapi.port</string>
             <string>${this._config.tequilapiPort}</string>
-            <string>--experiment-natpunching</string>
             <string>daemon</string>
           </array>
           <key>Sockets</key>
