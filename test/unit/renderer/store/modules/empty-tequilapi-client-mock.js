@@ -35,6 +35,7 @@ import { ServiceStatus } from 'mysterium-tequilapi/lib/dto/service-status'
 import { parseProposalDTO } from 'mysterium-tequilapi/lib/dto/proposal'
 import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
 import { AccessPolicyDTO } from 'mysterium-tequilapi/lib/dto/access-policies'
+import { NatStatusDTO } from 'mysterium-tequilapi/lib/dto/nat-status-dto'
 
 class EmptyTequilapiClientMock implements TequilapiClient {
   async healthCheck (_timeout: ?number): Promise<NodeHealthcheckDTO> {
@@ -133,6 +134,12 @@ class EmptyTequilapiClientMock implements TequilapiClient {
 
   async accessPolicies (): Promise<AccessPolicyDTO[]> {
     return []
+  }
+
+  async natStatus (): Promise<NatStatusDTO> {
+    return {
+      status: ''
+    }
   }
 }
 
