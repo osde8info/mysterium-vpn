@@ -7903,10 +7903,10 @@ mysterium-tequilapi@^0.8.1:
     "@babel/runtime" "^7.1.5"
     axios "^0.18.0"
 
-mysterium-tequilapi@^0.8.2:
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/mysterium-tequilapi/-/mysterium-tequilapi-0.8.2.tgz#f4209225a2f2a56c26dc1269f80297f6a0503971"
-  integrity sha512-HVwy7lGlqMsaewInhag0pTN4cUxVHGOotN1HsKP6JFe9wgAfSAfiTYyiYxQ7YPO5CRYlb6nJ2XsJaHQt59mg5A==
+mysterium-tequilapi@^0.8.3:
+  version "0.8.3"
+  resolved "https://registry.yarnpkg.com/mysterium-tequilapi/-/mysterium-tequilapi-0.8.3.tgz#8269f9fbdc8cae193526f7837662e30d4efe2df9"
+  integrity sha512-rQgOOX6tLTANsP3XM8uEPXXbqSoW2dlgrPMalyIcwvTYzOkZMxld/zmXt+omNmSkKJF+kI/xFahPT8qcn6Ioyg==
   dependencies:
     "@babel/runtime" "^7.1.5"
     axios "^0.18.0"

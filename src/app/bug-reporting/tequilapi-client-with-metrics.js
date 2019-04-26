@@ -37,6 +37,7 @@ import { ServiceInfoDTO } from 'mysterium-tequilapi/lib/dto/service-info'
 import { ServiceRequest } from 'mysterium-tequilapi/lib/dto/service-request'
 import { IdentityPayoutDTO } from 'mysterium-tequilapi/lib/dto/identity-payout'
 import { AccessPolicyDTO } from 'mysterium-tequilapi/lib/dto/access-policies'
+import { NatStatusDTO } from 'mysterium-tequilapi/lib/dto/nat-status-dto'
 
 class TequilapiClientWithMetrics implements TequilapiClient {
   _bugReporterMetrics: BugReporterMetrics
@@ -157,6 +158,10 @@ class TequilapiClientWithMetrics implements TequilapiClient {
 
   async accessPolicies (): Promise<AccessPolicyDTO[]> {
     return this._client.accessPolicies()
+  }
+
+  async natStatus (): Promise<NatStatusDTO> {
+    return this._client.natStatus()
   }
 }
 

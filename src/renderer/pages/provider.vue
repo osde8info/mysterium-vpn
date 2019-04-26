@@ -39,6 +39,17 @@
             (<span v-text="ipType"/>)
           </p>
         </div>
+        <div
+          class="nat-status"
+          v-if="NATStatus">
+          Automatic NAT traversal:
+          <span v-html="NATStatusHtml"/>
+          <a
+            class="nat-link"
+            href="#"
+            v-if="showNATLink"
+            @click.prevent="openNATInstructionsPage">How to configure NAT manually?</a>
+        </div>
       </div>
 
       <div class="control__body traffic-switch">
@@ -117,6 +128,7 @@ import { mapMutations, mapGetters } from 'vuex'
 import AppError from '../partials/app-error'
 import Tabs from '../components/tabs'
 import { ServiceStatus } from 'mysterium-vpn-js/lib/models/service-status'
+import { NATStatus } from 'mysterium-tequilapi/lib/dto/nat-status'
 import logger from '../../app/logger'
 import Identity from '../components/identity'
 import AppModal from '../partials/app-modal'
@@ -137,6 +149,7 @@ export default {
     'providerConfig',
     'providerService',
     'providerSessions',
+    'tequilapiClient',
     'rendererCommunication'
   ],
   data () {
@@ -152,7 +165,9 @@ export default {
       accessPolicyDefaults: {
         title: 'Whitelisted traffic',
         description: 'When you choose to run this traffic you can rest assured that it’s not coming from the dark web.'
-      }
+      },
+      NATStatus: null,
+      NATStatusInterval: null
     }
   },
   async mounted () {
@@ -176,6 +191,20 @@ export default {
     this.providerService.removeStatusSubscriber(this.onStatusChange)
     this.providerSessions.removeCountSubscriber(this.onSessionCountChange)
   },
+  watch: {
+    status: function (newStatus, oldStatus) {
+      if (newStatus === oldStatus) {
+        return
+      }
+
+      if (newStatus === ServiceStatus.RUNNING) {
+        this.startNATStatusFetching()
+        return
+      }
+
+      this.stopNATStatusFetching()
+    }
+  },
   computed: {
     ...mapGetters(['ip', 'location', 'errorMessage', 'showError', 'currentIdentity']),
     ipType () {
@@ -186,6 +215,22 @@ export default {
           return 'Cellular'
         default:
           return 'Data center'
+      }
+    },
+    showNATLink () {
+      const status = this.NATStatus.status || null
+
+      return status === NATStatus.FAILED || status === NATStatus.NOT_FINISHED
+    },
+    NATStatusHtml () {
+      const status = this.NATStatus.status || null
+      switch (status) {
+        case NATStatus.SUCCESSFUL:
+          return '<span class="text-success">Success</span>'
+        case NATStatus.FAILED:
+          return '<span class="text-failed">Failed</span>'
+        case NATStatus.NOT_FINISHED:
+          return '<span class="text-warning">In progress</span>'
       }
     },
     pendingRequests () {
@@ -359,8 +404,36 @@ export default {
       shell.openExternal(this.getProviderStatsLink(this.currentIdentity, this.providerConfig.serviceType))
     },
 
+    openNATInstructionsPage () {
+      const url = 'http://docs.mysterium.network/en/latest/user-guide/installation/' +
+        '#router-configuration-for-nodes-behind-nat'
+      shell.openExternal(url)
+    },
+
     getProviderStatsLink (providerId, serviceType) {
       return this.providerConfig.baseURL + '/node/' + providerId + '/' + serviceType
+    },
+
+    startNATStatusFetching () {
+      const fetch = async () => {
+        try {
+          const status = await this.tequilapiClient.natStatus()
+
+          this.NATStatus = status
+        } catch (e) {
+          logger.error('Failed fetching NAT status', e)
+        }
+      }
+
+      fetch()
+
+      this.NATStatusInterval = setInterval(fetch, 3000)
+    },
+
+    stopNATStatusFetching () {
+      this.NATStatus = null
+
+      clearInterval(this.NATStatusInterval)
     },
 
     startAccessPolicyFetching () {
@@ -398,3 +471,32 @@ export default {
   }
 }
 </script>
+
+<style lang="less">
+  .nat-link {
+    display: block;
+    color: #622461;
+    margin-top: 10px;
+    text-decoration: none;
+  }
+
+  .nat-status {
+    margin-top: 10px;
+  }
+
+  .text-success, .text-failed, .text-warning {
+    font-weight: bold;
+  }
+
+  .text-success {
+    color: #06930b;
+  }
+
+  .text-warning {
+    color: #c7bf00;
+  }
+
+  .text-failed {
+    color: #932510;
+  }
+</style>
