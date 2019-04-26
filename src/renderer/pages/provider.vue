@@ -152,8 +152,7 @@ export default {
       accessPolicyDefaults: {
         title: 'Whitelisted traffic',
         description: 'When you choose to run this traffic you can rest assured that it’s not coming from the dark web.'
-      },
-      residential: false
+      }
     }
   },
   async mounted () {
