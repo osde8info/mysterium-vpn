@@ -22,6 +22,7 @@
       <div class="terms-box">
         <div
           style="padding:1rem 8rem;"
+          id="terms-content"
           v-html="termsAndConditions.htmlContent"/>
       </div>
     </div>
@@ -39,6 +40,7 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import { shell } from 'electron'
 
 export default {
   name: 'Terms',
@@ -56,6 +58,17 @@ export default {
   },
   computed: {
     ...mapGetters(['termsAndConditions'])
+  },
+  mounted () {
+    const links = document.getElementById('terms-content')
+      .getElementsByTagName('a')
+
+    for (let i = 0; i < links.length; i++) {
+      links[i].addEventListener('click', function (e) {
+        e.preventDefault()
+        shell.openExternal(this.href)
+      })
+    }
   }
 }
 </script>
@@ -63,13 +76,16 @@ export default {
 <style lang="less">
   .terms {
     height: 100vh;
+
     .terms-content {
       margin-bottom: 50px;
     }
+
     .terms-box {
       height: 80vh;
       overflow: scroll;
     }
+
     .terms-actions {
       position: fixed;
       bottom: 0;
@@ -78,10 +94,12 @@ export default {
       text-align: center;
       background-color: #fff;
       border-top: 1px solid #eee;
+
       .btn {
         font-size: 1.5rem;
         max-width: 30rem;
         width: auto;
+
         &.btn-danger {
           background-color: #a60404;
           border-color: #a60404;
