@@ -7886,7 +7886,7 @@ mute-stream@0.0.7, mute-stream@~0.0.4:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.7.tgz#3075ce93bc21b8fab43e1bc4da7e8115ed1e7bab"
   integrity sha1-MHXOk7whuPq0PhvE2n6BFe0ee6s=
 
-mysterium-client-bin@^0.7.0:
+mysterium-client-bin@0.7.0:
   version "0.7.0"
   resolved "https://registry.yarnpkg.com/mysterium-client-bin/-/mysterium-client-bin-0.7.0.tgz#7507c324458ef6529ef866104ebba5594e3517d0"
   integrity sha512-OMe4iajQiLhTXpSko4LK+ZneXUw0nhGq3pIxgj1X4/QkkLlCJkL25G7c4TnF55R0V03+hjCmCiS54rCvoQZxUQ==
