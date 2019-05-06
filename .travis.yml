@@ -1,81 +1,58 @@
 osx_image: xcode9.2
 os: osx
 sudo: required
-language: js
+
+language: node_js
+node_js:
+  - "10"
+
 cache:
+  yarn: true
   directories:
-  - node_modules
-  - "$HOME/.electron"
-  - "$HOME/.cache"
+    - node_modules
+    - "$HOME/.electron"
+    - "$HOME/.cache"
+
 before_cache:
-- rm -rf node_modules/.yarn-integrity
-addons:
-  apt:
-    packages:
-    - libgnome-keyring-dev
-    - icnsutils
+  - rm -rf node_modules/.yarn-integrity
+
+before_install:
+  - if [ -z "$TRAVIS_TAG" ]; then
+      export TRAVIS_TAG=0.0.0-dev;
+    fi
+
 install:
-- nvm install 9
-- curl -o- -L https://yarnpkg.com/install.sh | bash
-- source ~/.bashrc
-- yarn global add xvfb-maybe
-- MYSTERIUM_CLIENT_PREVENT_LOCAL_INSTALL=true yarn
+  - yarn global add xvfb-maybe
+  - MYSTERIUM_CLIENT_PREVENT_LOCAL_INSTALL=true yarn
+
 jobs:
   include:
     - stage: Test
-      script: util_scripts/check-headers.sh
-      name: Check headers
-    - script: yarn flow
-      name: Flow
-    - script: yarn lint
-      name: Lint
-    - script: yarn unit
-      name: Unit tests
-    - script: yarn test:integration
-      name: Integration tests
-    - script: yarn test:coverage
-      name: Coverage
-    - script: yarn packages:check-outdated
-      name: Outdated packages
+      script:
+        - yarn ci
+
+    - stage: Update 0.0.0-dev
+      if: type != pull_request AND branch = master AND tag IS blank
+      script:
+        - git tag -f $TRAVIS_TAG
+        - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
+        - git push -f gh $TRAVIS_TAG
+
     - stage: Deploy
+      if: tag IS present
       script: skip
       before_deploy:
-      - bash util_scripts/travis-number.sh
-      - mkdir binaries && mkdir releases
-      # OS X
-      - FORCE_DOWNLOAD=1 yarn download:bins:osx
-      - yarn build
-      - cp build/MysteriumVPN-*.dmg binaries/MysteriumVPN-latest.dmg
-      - cp build/MysteriumVPN-*.dmg releases/
-      # Windows
-      - FORCE_DOWNLOAD=1 yarn download:bins:win
-      - yarn build:win
-      - cp build/MysteriumVPN\ Setup\ *.exe binaries/MysteriumVPN\ Setup\ Latest.exe
-      - cp build/MysteriumVPN\ Setup\ *.exe releases/
+        - bash util_scripts/travis-number.sh
+        - mkdir releases
+        # OS X
+        - FORCE_DOWNLOAD=1 yarn download:bins:osx
+        - yarn build
+        - cp build/MysteriumVPN-*.dmg releases/MysteriumVPN.dmg
+        # Windows
+        - FORCE_DOWNLOAD=1 yarn download:bins:win
+        - yarn build:win
+        - cp build/MysteriumVPN\ Setup\ *.exe releases/MysteriumVPN.exe
       deploy:
-        # Latest (master branch)
-        - provider: pages
-          local-dir: binaries
-          skip-cleanup: true
-          github-token: "$GITHUB_API_TOKEN"
-          keep-history: false
-          target-branch: mysterium_vpn
-          repo: MysteriumNetwork/build-artifacts
-          on:
-            tags: false
-            branch: master
-          # Release-candidate ('release/x.x' release branches)
-        - provider: pages
-          local-dir: releases
-          skip-cleanup: true
-          github-token: "$GITHUB_API_TOKEN"
-          keep-history: false
-          target-branch: mysterium_vpn_rc
-          repo: MysteriumNetwork/build-artifacts
-          on:
-            tags: false
-            all_branches: true
-            condition: $TRAVIS_BRANCH =~ ^release/[0-9]+\.[0-9]+$
         # Release (tags)
         - provider: releases
           file_glob: true
