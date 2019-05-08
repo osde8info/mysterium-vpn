@@ -59,6 +59,7 @@ jobs:
         - provider: releases
           file_glob: true
           file: releases/*
+          overwrite: true
           skip_cleanup: true
           api_key: "$GITHUB_API_TOKEN"
           on:
