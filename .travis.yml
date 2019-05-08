@@ -36,6 +36,7 @@ jobs:
       script:
         - git tag -f $TRAVIS_TAG
         - git remote add gh https://${TRAVIS_REPO_SLUG%/*}:${GITHUB_API_TOKEN}@github.com/${TRAVIS_REPO_SLUG}.git
+        - git push gh :refs/tags/$TRAVIS_TAG
         - git push -f gh $TRAVIS_TAG
 
     - stage: Deploy
