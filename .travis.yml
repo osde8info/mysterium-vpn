@@ -28,6 +28,7 @@ install:
 jobs:
   include:
     - stage: Test
+      if: tag != 0.0.0-dev
       script:
         - yarn ci
 
