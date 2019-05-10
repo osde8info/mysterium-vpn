@@ -200,7 +200,7 @@ export default {
       this.changingEthAddress = false
     },
     bountyRegistrationForm () {
-      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Z4rbwr')
+      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Y0D7a5')
     }
   },
   computed: {
