@@ -23,7 +23,7 @@ import Publisher from '../../publisher'
 import type { StatusCallback } from './monitoring'
 import { HEALTH_CHECK_INTERVAL } from './monitoring'
 
-const HEALTHCHECK_TIMEOUT = 500
+const HEALTHCHECK_TIMEOUT = 2000
 
 class TequilapiStatusNotifier implements StatusNotifier {
   _api: TequilapiClient
