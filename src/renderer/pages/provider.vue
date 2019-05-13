@@ -79,6 +79,12 @@
             <label for="all-traffic">All traffic</label>
           </div>
         </div>
+        <p style="margin-top: -10px; color: #622461; font-weight: bold;">
+          Start earning money by running this service.
+          <a
+            href="#"
+            @click.prevent="bountyRegistrationForm">Register to bounty program</a>.
+        </p>
       </div>
 
       <div class="control__bottom">
@@ -408,6 +414,10 @@ export default {
       const url = 'http://docs.mysterium.network/en/latest/user-guide/installation/' +
         '#router-configuration-for-nodes-behind-nat'
       shell.openExternal(url)
+    },
+
+    bountyRegistrationForm () {
+      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Y0D7a5')
     },
 
     getProviderStatsLink (providerId, serviceType) {

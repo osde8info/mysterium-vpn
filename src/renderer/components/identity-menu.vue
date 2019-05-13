@@ -84,14 +84,6 @@
             Change
           </div>
 
-          <h2 class="smaller">Registration to Node Runner Bounty Pilot</h2>
-          <p>
-            <a
-              href="#"
-              class="btn"
-              @click.prevent="bountyRegistrationForm">Registration form</a>
-          </p>
-
           <div
             v-if="paymentsAreEnabled && registrationFetched && !registration.registered">
             <p>
@@ -198,9 +190,6 @@ export default {
       await this.tequilapiClient.updateIdentityPayout(identity.id, this.inputEthAddress)
       this.savedEthAddress = this.inputEthAddress
       this.changingEthAddress = false
-    },
-    bountyRegistrationForm () {
-      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Y0D7a5')
     }
   },
   computed: {
