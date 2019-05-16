@@ -169,9 +169,9 @@ describe('ServiceManagerProcess', () => {
     it('restarts running service if healthcheck was failed', async () => {
       tequilapiClient.healthCheckThrowsError = true
       const startPromise = process.start()
-      await tickWithDelay(2000)
+      await tickWithDelay(5000)
       tequilapiClient.healthCheckThrowsError = false
-      await tickWithDelay(2000)
+      await tickWithDelay(6000)
       await startPromise
       expect(systemMockManager.sudoExecCalledCommands).to.have.length(1)
       expect(systemMockManager.sudoExecCalledCommands[0]).to.be.eql(

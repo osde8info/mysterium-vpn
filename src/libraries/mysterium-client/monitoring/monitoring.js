@@ -21,7 +21,7 @@ import type { StatusNotifier } from './status-notifier'
 import { onFirstEventOrTimeout } from '../../../app/events'
 import type { Unsubscribe } from '../../publisher'
 
-const HEALTH_CHECK_INTERVAL = 1500
+const HEALTH_CHECK_INTERVAL = 3000
 
 type StatusCallback = (boolean) => void
 type EmptyCallback = () => void

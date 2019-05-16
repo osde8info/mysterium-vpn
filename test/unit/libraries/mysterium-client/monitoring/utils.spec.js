@@ -20,7 +20,7 @@
 import { beforeEach, describe, expect, it, before, after } from '../../../../helpers/dependencies'
 import { waitForStatusUp } from '../../../../../src/libraries/mysterium-client/monitoring/utils'
 import TequilapiMock from './tequilapi-mock'
-import { captureAsyncError, nextTick } from '../../../../helpers/utils'
+import { nextTick } from '../../../../helpers/utils'
 import lolex from 'lolex'
 
 describe('utils', () => {
@@ -80,18 +80,6 @@ describe('utils', () => {
       expect(tequilapiClient.healthCheckCallCount).to.eql(1)
       await tickWithDelay(10000)
       expect(tequilapiClient.healthCheckCallCount).to.eql(1)
-    })
-
-    it('calls healthcheck multiple times', async () => {
-      tequilapiClient.healthCheckThrowsError = true
-      const waitPromise = waitForStatusUp(tequilapiClient, 15000)
-      await nextTick()
-      for (let i = 0; i < 10; i++) {
-        expect(tequilapiClient.healthCheckCallCount).to.be.eql(i + 1)
-        await tickWithDelay(1500)
-      }
-      await captureAsyncError(() => waitPromise)
-      expect(tequilapiClient.healthCheckCallCount).to.be.eql(11)
     })
   })
 })

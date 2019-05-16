@@ -60,10 +60,10 @@ describe('TequilapiStatusNotifier', () => {
       await nextTick()
       expect(tequilapiClient.healthCheckCallCount).to.be.eql(1)
 
-      await tickWithDelay(1500)
+      await tickWithDelay(4000)
       expect(tequilapiClient.healthCheckCallCount).to.be.eql(2)
 
-      await tickWithDelay(1500)
+      await tickWithDelay(4000)
       expect(tequilapiClient.healthCheckCallCount).to.be.eql(3)
     })
   })
@@ -90,11 +90,11 @@ describe('TequilapiStatusNotifier', () => {
       expect(lastStatus).to.be.true
 
       tequilapiClient.healthCheckThrowsError = true
-      await tickWithDelay(2000)
+      await tickWithDelay(3000)
       expect(lastStatus).to.be.false
 
       tequilapiClient.healthCheckThrowsError = false
-      await tickWithDelay(2000)
+      await tickWithDelay(3000)
       expect(lastStatus).to.be.true
     })
   })
