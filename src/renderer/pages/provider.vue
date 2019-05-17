@@ -417,7 +417,7 @@ export default {
     },
 
     bountyRegistrationForm () {
-      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Y0D7a5')
+      shell.openExternal('https://mysteriumnetwork.typeform.com/to/Z4rbwr')
     },
 
     getProviderStatsLink (providerId, serviceType) {
