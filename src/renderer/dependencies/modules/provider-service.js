@@ -25,9 +25,7 @@ export default function bootstrap (container: Container) {
   container.constant('providerConfig', {
     'baseURL': 'https://testnet.mysterium.network',
     'serviceType': 'openvpn',
-    'options': {
-      'port': 1194
-    }
+    'options': {}
   })
   container.service('providerService', ['tequilapiClient'], (tequilapiClient) => {
     return new ProviderService(tequilapiClient)
