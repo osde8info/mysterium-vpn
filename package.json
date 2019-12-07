@@ -105,7 +105,7 @@
     "axios": "^0.18.0",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "dbly-linked-list": "^0.2.0",
-    "electron-dl": "^1.14.0",
+    "electron-dl": "^2.0.0",
     "electron-notifications": "^1.0.0",
     "file-size": "^1.0.0",
     "flow-typed": "^2.5.1",
