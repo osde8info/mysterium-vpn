@@ -29,7 +29,9 @@
     "packages:check-outdated": "yarn outdated --json | node ./util_scripts/outdated-dependencies.js",
     "ci": "util_scripts/check-headers.sh && yarn flow && yarn lint && yarn unit && yarn test:integration && yarn test:coverage",
     "update-myst-binary": "yarn download-mysterium-client && cp -r ./node_modules/mysterium-client-bin/bin/* ./bin/",
-    "postinstall": "mkdir -p ./bin && cp -r ./node_modules/mysterium-client-bin/bin/* ./bin/"
+    "postinstall": "mkdir -p ./bin && cp -r ./node_modules/mysterium-client-bin/bin/* ./bin/",
+    "snyk-protect": "snyk protect",
+    "prepare": "yarn run snyk-protect"
   },
   "build": {
     "productName": "MysteriumVPN",
@@ -130,7 +132,8 @@
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
     "winston": "^3.0.0",
-    "winston-transport": "^4.2.0"
+    "winston-transport": "^4.2.0",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.0.0-beta.24",
@@ -203,5 +206,6 @@
     "webpack-dev-server": "^3.1.8",
     "webpack-hot-middleware": "^2.23.1",
     "webpack-merge": "^4.1.4"
-  }
+  },
+  "snyk": true
 }
