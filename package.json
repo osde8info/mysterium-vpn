@@ -108,7 +108,7 @@
     "electron-dl": "^1.14.0",
     "electron-notifications": "^1.0.0",
     "file-size": "^1.0.0",
-    "flow-typed": "^2.5.1",
+    "flow-typed": "^2.5.2",
     "jpex": "^2.1.0",
     "less": "^3.8.1",
     "less-loader": "^4.1.0",
