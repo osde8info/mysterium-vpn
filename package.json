@@ -175,7 +175,7 @@
     "flow-bin": "^0.80.0",
     "flow-runtime": "^0.17.0",
     "html-webpack-plugin": "^3.2.0",
-    "karma": "^3.0.0",
+    "karma": "^6.3.14",
     "karma-chai": "^0.1.0",
     "karma-coverage": "^1.1.2",
     "karma-electron": "^6.0.0",
