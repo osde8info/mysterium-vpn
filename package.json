@@ -102,7 +102,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.0.0",
-    "axios": "^0.18.0",
+    "axios": "^1.6.4",
     "babel-plugin-transform-builtin-extend": "^1.1.2",
     "dbly-linked-list": "^0.2.0",
     "electron-dl": "^1.14.0",
@@ -116,7 +116,7 @@
     "md5": "^2.2.1",
     "mysterium-client-bin": "0.0.0-dev",
     "mysterium-tequilapi": "^0.8.3",
-    "mysterium-vpn-js": "^0.0.15",
+    "mysterium-vpn-js": "^1.0.0",
     "node-zip": "^1.1.1",
     "os-name": "^2.0.1",
     "raven": "^2.4.1",
