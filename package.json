@@ -123,7 +123,7 @@
     "raven-js": "^3.22.3",
     "sudo-prompt": "^8.1.0",
     "tail": "^1.2.3",
-    "vue": "^2.5.17",
+    "vue": "^3.0.0",
     "vue-electron": "^1.0.6",
     "vue-inject": "^2.0.1",
     "vue-multiselect": "^2.0.8",
